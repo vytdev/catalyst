@@ -1,0 +1,23 @@
+#!/bin/sh
+
+src=src
+out=scripts
+pack="catalyst.mcpack"
+
+# some cleanup
+mkdir -p "$out"
+rm -rf "$out"/*
+
+# run typescript
+npx tsc
+
+# copy additional files
+for file in $( find "$src" -type f ! -name "*.[jt]s" ) ; do
+	dest="$out${file#"$src"}"
+	mkdir -p "$( dirname "$dest" )"
+	cp "$file" "$dest"
+done
+
+# package add-on
+rm "$pack"
+zip -r "$pack" "$out" 'manifest.json' 'pack_icon.png' 'LICENSE' 'README.md'

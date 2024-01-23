@@ -1,0 +1,31 @@
+{
+  "name": "catalyst-smp",
+  "version": "0.1.0",
+  "description": "A simple add-on to enchance your vanilla Minecraft Bedrock SMPs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "sh ./build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vytdev/catalyst.git"
+  },
+  "keywords": [
+    "minecraft",
+    "bedrock",
+    "add-ons",
+    "smp"
+  ],
+  "author": "vytdev <https://vytdev.github.io>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vytdev/catalyst/issues"
+  },
+  "homepage": "https://github.com/vytdev/catalyst#readme",
+  "devDependencies": {
+    "@minecraft/server": "^1.8.0-beta.1.20.50-stable",
+    "@minecraft/server-ui": "^1.1.0",
+    "typescript": "^5.3.3"
+  }
+}
