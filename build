@@ -2,7 +2,10 @@
 
 src=src
 out=scripts
-pack="catalyst.mcpack"
+pack="catalyst_$(
+		cat "manifest.json" |
+		sed -n '0,/.*"version": "\(.*\)".*/s//\1/p'
+	).mcpack"
 
 # some cleanup
 mkdir -p "$out"

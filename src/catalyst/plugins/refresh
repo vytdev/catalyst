@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# where we save it
+out="load.js"
+
+# create the list
+echo "/**" > "$out"
+echo " * auto-generated! use './refresh' script" >> "$out"
+echo " */" >> "$out"
+
+# list all folder names
+for dir in $( find . -mindepth 1 -maxdepth 1 -type d ) ; do
+	name=${dir#"./"}
+
+	if [ "$name" = "core" ] || [ ! -e "$name/app.js" ] && [ ! -e "$name/app.ts" ] ; then
+		continue
+	fi
+
+	echo "$name"
+	echo "import \"./$name/app.js\";" >> "$out"
+done
