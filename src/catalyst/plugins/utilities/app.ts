@@ -1,5 +1,5 @@
-import core, { config as coreCfg } from "../../index.js";
-import config from "./config.js";
+import core from "../../index.js";
+import config from "../../config.js";
 const plugin = new core.Plugin("utilities", function(require, module, exports) {
 
 // require some plugins
@@ -41,7 +41,7 @@ const cmd_broadcast = core.registerCommand("broadcast", (argv, ev) => {
 // block messages when chat is disabled
 const listener_beforeChatSend = core.events.on("beforeChatSend", ev => {
 	// a custom command, end here
-	if (ev.message.startsWith(coreCfg.commandPrefix)) return;
+	if (ev.message.startsWith(config.commandPrefix)) return;
 
 	// block messages when chat is disabled
 	if (!chatsEnabled && !permissions.hasPermission(ev.sender, config.adminPerm)) {

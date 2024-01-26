@@ -1,10 +1,13 @@
+import core from "../../index.js";
+import config from "../../config.js";
 import { clean } from "./filter.js";
-import core, { config as coreCfg } from "../../index.js";
 const plugin = new core.Plugin("chats", function(require, module, exports) {
 
 const listener_beforeChatSend = core.events.on("beforeChatSend", ev => {
 	// a custom command
-	if (ev.message.startsWith(coreCfg.commandPrefix)) return;
+	if (ev.message.startsWith(config.commandPrefix)) return;
+	// event already canceled
+	if (ev.cancel) return;
 	// cancel broadcast
 	ev.cancel = true;
 
@@ -21,9 +24,9 @@ const listener_beforeChatSend = core.events.on("beforeChatSend", ev => {
 		" " + core.formats.yellow + "Z:" + core.formats.reset + Math.floor(ev.sender.location.z));
 
 	// [\ command ] placeholder
-	msg = msg.replace(new RegExp(`\\[\\${coreCfg.commandPrefix}([^\\]]+)\\]`, "g"),
+	msg = msg.replace(new RegExp(`\\[\\${config.commandPrefix}([^\\]]+)\\]`, "g"),
 		(_, cmd) => core.formats.aqua + "[" + core.formats.yellow +
-			coreCfg.commandPrefix + cmd + core.formats.aqua + "]" +
+			config.commandPrefix + cmd + core.formats.aqua + "]" +
 			core.formats.reset);
 
 	// broadcast the message through [/tellraw]

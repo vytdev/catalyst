@@ -28,4 +28,11 @@ export default {
 	 * max number of thread tasks to execute every tick
 	 */
 	threadBuffer: 512,
+
+	// other configs here
+
+	/**
+	 * permission id needed for a player to have administration control
+	 */
+	adminPerm: 'admin',
 } as const;
