@@ -4,6 +4,10 @@ const plugin = new core.Plugin("speedometer", function(require, module, exports)
 
 // list of players (their id) that use speedometer
 const players: string[] = [];
+// global database to preserve the state of speedometer
+const db = new core.Database(module.id);
+// update 'players' variable based on last state
+db.load()?.['list']?.forEach?.((v: string) => players.push(v));
 
 // register command
 const cmd = core.registerCommand("speedometer", (argv, ev) => {
@@ -24,6 +28,12 @@ const cmd = core.registerCommand("speedometer", (argv, ev) => {
 		state = core.formats.red + "disabled";
 		players.splice(players.indexOf(player.id), 1);
 	}
+
+	// update database
+	db.set('list', players);
+	try {
+		db.save();
+	} catch { /* no-op */ }
 
 	player.sendMessage(`${core.formats.yellow}Speedometer has been ${state}`);
 }, [ "spdm" ]);

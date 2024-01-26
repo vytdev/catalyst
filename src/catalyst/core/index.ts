@@ -19,6 +19,7 @@ export const VERSION = "0.1.0-beta";
 
 // preload and export modules
 export * from "./command.js";
+export * from "./database.js";
 export * from "./events.js";
 export * from "./format.js";
 export * from "./glyphs.js";
