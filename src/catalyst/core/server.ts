@@ -61,7 +61,7 @@ system.runInterval(() => {
  */
 export function queueCommand(cmd: string, target?: Entity | Dimension): Promise<CommandResult> {
 	return new Promise<CommandResult>(resolve => cmdQueue.push(resolve))
-		.then(r => runCommand(cmd));
+		.then(r => runCommand(cmd, target));
 }
 
 /**
