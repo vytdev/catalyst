@@ -47,16 +47,18 @@ system.runInterval(() => {
 });
 
 /**
+ * @class Thread
  * thread handler
  * @template A args of the generator function
  * @template R return type of the generator function
  */
 export class Thread<A extends any[], R extends any> {
 	/**
+	 * @constructor
 	 * initialize a new Thread instance
 	 * @param fn the generator function
 	 */
-	constructor(fn: genFn<A, R, Thread<any, any>, unknown, unknown>) {
+	constructor(fn: genFn<A, R, Thread<A, any>, unknown, unknown>) {
 		this._function = fn;
 		this.threadId = id++;
 	}
@@ -108,6 +110,9 @@ export class Thread<A extends any[], R extends any> {
 		// the thread isn't active yet
 		if (!this.isActive) {
 			this._task = this._function.apply(this, args);
+
+			// multi threading disabled
+			if (!config.multiThreading) this.join();
 
 			// return Promise
 			return new Promise<R>((res, rej) => {

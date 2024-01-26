@@ -86,7 +86,13 @@ export class EventManager<T extends Record<string, any[]>> {
 			// run the listener
 			try {
 				listener.callback?.(...args);
-			} catch { /* no-op */ };
+			} catch (e) {
+				// error
+				console.error(
+					`Uncaught exception on an event listener for ${event as string}:\n`,
+					e?.stack || e
+				);
+			}
 
 			// the listener only listens once
 			if (listener.once) this.removeEventListener(listener);

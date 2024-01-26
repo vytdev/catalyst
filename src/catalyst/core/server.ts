@@ -37,35 +37,42 @@ export function message(msg: string, target?: Player | Player[]): void {
 	// [/tellraw] command
 	const cmd = `tellraw @s {"rawtext":[{"text":${JSON.stringify(msg)}}]}`;
 	// run command
-	if (target instanceof Player) runCommand(cmd, target);
-	else if (target instanceof Array) target.forEach(plr => runCommand(cmd, plr));
-	else runCommand(cmd);
+	if (target instanceof Player) queueCommand(cmd, target);
+	else if (target instanceof Array) target.forEach(plr => queueCommand(cmd, plr));
+	else world.getAllPlayers()?.forEach(plr => queueCommand(cmd, plr));
 }
 
 // command queue
 const cmdQueue: Function[] = [];
-// just trigger promises every tick
+// flush the command queue
 system.runInterval(() => {
 	// initial value for buffer
 	let buffer = config.commandBuffer;
 	// loop
-	while (cmdQueue.length && buffer > 0) {
+	while (cmdQueue.length && buffer-- > 0)
 		cmdQueue.shift()?.();
-		buffer--;
-	}
 });
 
 /**
- * queue a command
+ * queue a minecraft command
  * @param cmd the command
  * @param [target] the target
  * @returns a promise which later can be resolved
  */
-export function runCommand(cmd: string, target?: Entity | Dimension): Promise<CommandResult> {
+export function queueCommand(cmd: string, target?: Entity | Dimension): Promise<CommandResult> {
 	return new Promise<CommandResult>(resolve => cmdQueue.push(resolve))
-	.then(r => (target ?? world.getDimension("overworld")).runCommand(cmd));
+		.then(r => runCommand(cmd));
 }
 
+/**
+ * run a minecraft command
+ * @param cmd the command
+ * @param [target] the target
+ * @returns the command result
+ */
+export function runCommand(cmd: string, target?: Entity | Dimension): CommandResult {
+	return (target ?? world.getDimension("overworld")).runCommand(cmd);
+}
 
 // listen for internal events
 world.beforeEvents.chatSend.subscribe(ev => events.dispatchEvent("beforeChatSend", ev));

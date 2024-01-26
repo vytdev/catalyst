@@ -14,6 +14,7 @@ export let commandPrefix: string = config.commandPrefix;
 
 /**
  * change the command prefix
+ * @param newPrefix new prefix
  */
 export function setCommandPrefix(newPrefix: string): void {
 	events.dispatchEvent("commandPrefixChanged", commandPrefix, newPrefix);

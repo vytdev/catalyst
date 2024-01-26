@@ -41,10 +41,12 @@ type slotType = "slot.weapon.mainhand" | "slot.weapon.offhand" | "slot.armor.hea
 	| "slot.chest" | "slot.equippable";
 
 /**
+ * @class Selector
  * selector builder
  */
 export class Selector {
 	/**
+	 * @constructor
 	 * make a new selector builder
 	 * @param [base] the base selector
 	 */

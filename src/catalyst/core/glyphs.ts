@@ -13,9 +13,7 @@
 // lg = left grab
 // rg = right grab
 
-export const glyphs: {
-	[name: string]: string
-} = {
+export const glyphs: Record<string, string> = {
 	xbox_a: "\uE000",
 	xbox_b: "\uE001",
 	xbox_x: "\uE002",

@@ -55,10 +55,12 @@ type pluginEvents = {
 };
 
 /**
+ * @class Plugin
  * plugin class
  */
 export class Plugin extends EventManager<pluginEvents> {
 	/**
+	 * @constructor
 	 * make a new plugin
 	 * @param id the identifier of the plugin
 	 * @param fn the startup function of the plugin
