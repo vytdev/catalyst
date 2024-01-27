@@ -30,9 +30,27 @@ export interface commandToken {
 	quoted: boolean,
 }
 
-export interface commandEntry {
+/**
+ * command data
+ */
+export interface commandData {
+	/**
+	 * name of command
+	 */
 	name: string,
+
+	/**
+	 * command help
+	 */
+	help?: string,
+
+	/**
+	 * command aliases
+	 */
 	aliases?: string[],
+}
+
+export interface commandEntry extends commandData {
 	callback: commandCallback,
 }
 
@@ -113,13 +131,18 @@ const registry: commandEntry[] = [];
 
 /**
  * registers a new command
- * @param name the name of command
+ * @param data command data
  * @param callback the function to execute when the command is called
  * @param [aliases] optional command aliases
  * @returns the command entry
  */
-export function registerCommand(name: string, callback: commandCallback, aliases?: string[]): commandEntry {
-	const cmd = { name, callback, aliases: aliases ?? [] };
+export function registerCommand(data: commandData, callback: commandCallback): commandEntry {
+	const cmd = {
+		name: data.name,
+		help: data.help || "No description.",
+		aliases: data.aliases ?? [],
+		callback,
+	};
 	registry.push(cmd);
 	events.dispatchEvent("commandRegistered", cmd);
 	return cmd;
@@ -143,6 +166,15 @@ export function deregisterCommand(name: string): void {
  */
 export function getCommand(cmd: string): commandEntry {
 	return registry.find(v => v.name == cmd || v.aliases?.includes(cmd));
+}
+
+/**
+ * get the command registry
+ * @returns an array of registered commands
+ */
+export function getAllCommands(): commandEntry[] {
+	// we internally handle the registry
+	return registry.map(v => ({ ...v }));
 }
 
 /**

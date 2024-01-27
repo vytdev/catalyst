@@ -8,7 +8,10 @@ const permissions = require("permissions");
 let chatsEnabled = true;
 
 // \chat - toggles the chat
-const cmd_chat = core.registerCommand("chat", (argv, ev) => {
+const cmd_chat = core.registerCommand({
+	name: "chat",
+	help: "Toggles the chat",
+}, (argv, ev) => {
 	// check permission
 	permissions.assertHasPermission(ev.sender, core.config.adminPerm);
 
@@ -29,13 +32,17 @@ const cmd_chat = core.registerCommand("chat", (argv, ev) => {
 });
 
 // \broadcast - broadcasts message
-const cmd_broadcast = core.registerCommand("broadcast", (argv, ev) => {
+const cmd_broadcast = core.registerCommand({
+	name: "broadcast",
+	aliases: [ "b" ],
+	help: "Broadcast a message to server",
+}, (argv, ev) => {
 	// check permission
 	permissions.assertHasPermission(ev.sender, core.config.adminPerm);
 
 	// broadcast message
 	core.broadcast(argv.slice(1).map(v => v.text).join(" "), core.formats.aqua);
-}, [ "b" ]);
+});
 
 // block messages when chat is disabled
 const listener_beforeChatSend = core.events.on("beforeChatSend", ev => {

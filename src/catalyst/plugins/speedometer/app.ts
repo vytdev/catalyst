@@ -10,7 +10,11 @@ const db = new core.Database(module.id);
 db.load()?.['list']?.forEach?.((v: string) => players.push(v));
 
 // register command
-const cmd = core.registerCommand("speedometer", (argv, ev) => {
+const cmd = core.registerCommand({
+	name: "speedometer",
+	aliases: [ "spdm" ],
+	help: "Toggles your speedometer.",
+}, (argv, ev) => {
 	// command called from core.callCommand()
 	if (!ev) throw "Not available on API!";
 	// player
@@ -36,7 +40,7 @@ const cmd = core.registerCommand("speedometer", (argv, ev) => {
 	} catch { /* no-op */ }
 
 	player.sendMessage(`${core.formats.yellow}Speedometer has been ${state}`);
-}, [ "spdm" ]);
+});
 
 // loop per tick
 const loop = system.runInterval(() => {
