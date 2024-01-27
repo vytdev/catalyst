@@ -1,5 +1,5 @@
 import { system, world } from "@minecraft/server";
-import core from "../../index.js";
+import * as core from "../../index.js";
 const plugin = new core.Plugin("speedometer", function(require, module, exports) {
 
 // list of players (their id) that use speedometer

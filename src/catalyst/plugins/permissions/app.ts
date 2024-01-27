@@ -1,5 +1,5 @@
 import { Player } from "@minecraft/server";
-import core from "../../index.js";
+import * as core from "../../index.js";
 const plugin = new core.Plugin("permissions", function(require, module, exports) {
 
 /**
