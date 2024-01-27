@@ -1,5 +1,5 @@
-import { commandToken, commandEntry } from "./command.js";
-import { Plugin } from "./plugin.js";
+import { commandToken, commandEntry } from "../core/command.js";
+import { Plugin } from "../core/plugin.js";
 import {
 	ChatSendBeforeEvent,
 	DataDrivenEntityTriggerBeforeEvent,

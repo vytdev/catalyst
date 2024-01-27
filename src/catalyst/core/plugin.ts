@@ -2,12 +2,11 @@
  * a simple plugin registry system
  */
 
-import type { Dictionary } from "./types.d.ts";
 import { EventManager } from "./events.js";
 import { events } from "./index.js";
 
 const registry: Map<string, Plugin> = new Map();
-type exportsType = Dictionary<any>;
+type exportsType = Record<string, any>;
 
 /**
  * loads a plugin

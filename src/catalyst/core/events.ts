@@ -88,10 +88,10 @@ export class EventManager<T extends Record<string, any[]>> {
 				listener.callback?.(...args);
 			} catch (e) {
 				// error
-				console.error(
-					`Uncaught exception on an event listener for ${event as string}:\n`,
-					e?.stack || e
-				);
+				let msg = `Uncaught exception on an event listener for ${event as string}:\n`;
+				msg += e;
+				if (e?.stack) msg += e.stack;
+				console.error(e);
 			}
 
 			// the listener only listens once

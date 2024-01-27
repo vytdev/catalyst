@@ -4,7 +4,7 @@
 
 import { system, world } from "@minecraft/server";
 import { EventManager } from "./events.js";
-import type { defaultEvents } from "./types.d.ts";
+import { defaultEvents } from "../@types/types";
 import config from "../config.js";
 
 /**
@@ -22,6 +22,7 @@ export * from "./command.js";
 export * from "./database.js";
 export * from "./events.js";
 export * from "./format.js";
+export * from "./forms.js";
 export * from "./glyphs.js";
 export * from "./logger.js";
 export * from "./math.js";
@@ -31,7 +32,7 @@ export * from "./selector.js";
 export * from "./server.js";
 export * from "./thread.js";
 export * from "./tick.js";
-export type * from "./types.d.ts";
+export * from "./utils.js";
 
 
 // monitor the world tick

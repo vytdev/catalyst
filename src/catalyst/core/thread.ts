@@ -4,7 +4,7 @@
 
 import { system } from "@minecraft/server";
 import config from "../config.js";
-import type { genFn } from "./types.d.ts";
+import { genFn } from "../@types/types";
 
 // id counter
 let id: number = 0;
