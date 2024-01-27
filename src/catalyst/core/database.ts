@@ -125,4 +125,13 @@ export class Database<T extends Record<string, any>> {
 		this._cache = {} as T;
 	}
 
+	/**
+	 * returns string representation of the database
+	 * @returns string
+	 */
+	toString(): string {
+		let host = this.host instanceof Entity ? this.host.id : "world";
+		return `Database[${this.id} @ ${host}]`;
+	}
+
 }
