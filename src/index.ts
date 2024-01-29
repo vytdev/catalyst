@@ -1,7 +1,7 @@
 /**
  * the entry point
  */
-import * as core from "./catalyst/index.js";
+import "./catalyst/index.js";
 
 // load the server
 import "./server/index.js";
