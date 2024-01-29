@@ -15,7 +15,7 @@ export const events = new EventManager<defaultEvents>();
 /**
  * the version of catalyst core
  */
-export const VERSION = "0.1.0-beta";
+export const VERSION = "0.2.0-alpha.1";
 
 // preload and export modules
 export * from "./command.js";
