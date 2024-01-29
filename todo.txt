@@ -1,0 +1,15 @@
+sample server
+
+- warp & random tp
+- homes (\sethome, \delhome, \home)
+- ranks
+- permissions (owner, admin, moderator, member)
+- shop
+- sidebar stats
+- economy (\pay, \auction)
+- quests & rewards
+- chest gui
+- stackable mobs
+- custom spawners
+- auto sell chest
+- anti cheat

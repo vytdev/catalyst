@@ -7,3 +7,6 @@ import * as core from "./catalyst/index.js";
 core.loadPlugin("speedometer");
 core.loadPlugin("utilities");
 core.loadPlugin("chats");
+
+// load the server
+import "./server/index.js";

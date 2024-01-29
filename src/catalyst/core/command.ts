@@ -222,10 +222,9 @@ world.beforeEvents.chatSend.subscribe(ev => {
 	} catch (e) {
 		let msg: string = formats.red;
 
+		msg += e;
 		// Error instance
-		if (e?.stack) msg += e.stack;
-		// string only
-		else msg += e;
+		if (e?.stack) msg += "\n" + e.stack;
 
 		ev.sender.sendMessage(msg);
 	}

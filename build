@@ -1,11 +1,11 @@
 #!/bin/sh
 
 src=src
-out=scripts
+out=BP/scripts
 pack="catalyst_$(
-		cat "manifest.json" |
+		cat "BP/manifest.json" |
 		sed -n '0,/.*"version": "\(.*\)".*/s//\1/p'
-	).mcpack"
+	).mcaddon"
 
 # some cleanup
 mkdir -p "$out"
@@ -23,4 +23,4 @@ done
 
 # package add-on
 rm "$pack"
-zip -r "$pack" "$out" 'manifest.json' 'pack_icon.png' 'LICENSE' 'README.md'
+zip -r "$pack" 'BP' 'RP' 'LICENSE' 'README.md'

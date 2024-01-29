@@ -16,5 +16,5 @@ node_modules/
 .node_repl_history
 
 # builds
-/scripts
-catalyst_*.mcpack
+/BP/scripts
+catalyst_*.mcaddon
