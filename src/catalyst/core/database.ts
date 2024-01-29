@@ -94,10 +94,11 @@ export class Database<T extends Record<string, any>> {
 	/**
 	 * retrieve a set value from a key
 	 * @param key the key
+	 * @param def default value if not found
 	 * @returns the value
 	 */
-	public get<K extends keyof T>(key: K): T[K] {
-		return this._cache[key];
+	public get<K extends keyof T, D extends any>(key: K, def?: D): T[K] | D {
+		return this._cache[key] ?? def;
 	}
 
 	/**
