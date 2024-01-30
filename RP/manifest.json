@@ -4,7 +4,7 @@
 	"header": {
 		"name": "Catalyst (RES)",
 		"description": "A simple add-on to enchance your vanilla Minecraft Bedrock SMPs",
-		"version": "0.2.0-alpha.1",
+		"version": "0.2.0-beta.1",
 		"uuid": "9541e7d4-12a5-4908-ab76-5095fb4c1368",
 		"min_engine_version": [ 1, 20, 50 ]
 	},
