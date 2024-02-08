@@ -1,5 +1,7 @@
 <div align="center">
 
+![icon](BP/pack_icon.png)
+
 # Catalyst
 
 Catalyst is a simple add-on that enhances your SMPs and realms, allowing you to
