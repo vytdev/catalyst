@@ -4,7 +4,7 @@
 
 import { system, world } from "@minecraft/server";
 import { EventManager } from "./events.js";
-import { defaultEvents } from "../@types/types";
+import { defaultEvents } from "../@types/events";
 import config from "../config.js";
 
 /**
