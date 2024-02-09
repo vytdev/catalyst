@@ -2,7 +2,7 @@
  * dynamic property database
  */
 
-import { World, Entity, world } from "@minecraft/server";
+import { World, Entity, ItemStack, world } from "@minecraft/server";
 
 /**
  * @class Database
@@ -18,10 +18,10 @@ export class Database<T extends Record<string, any>> {
 	 * @constructor
 	 * initialize a new instance of this class
 	 * @param id the database identifier
-	 * @param [host] the database host, can be either world or an entity,
-	 * world by default
+	 * @param [host] the database host, can be either world, an item stack, or
+	 * an entity world by default
 	 */
-	constructor(id: string, host: World | Entity = world) {
+	constructor(id: string, host: World | Entity | ItemStack = world) {
 		this.id = "db:" + id;
 		this.host = host;
 	}
@@ -33,7 +33,7 @@ export class Database<T extends Record<string, any>> {
 	/**
 	 * the database host
 	 */
-	public readonly host: World | Entity;
+	public readonly host: World | Entity | ItemStack;
 
 	/**
 	 * load the database from the host
@@ -131,7 +131,11 @@ export class Database<T extends Record<string, any>> {
 	 * @returns string
 	 */
 	toString(): string {
-		let host = this.host instanceof Entity ? this.host.id : "world";
+		let host = this.host instanceof Entity
+			? this.host.id
+			: this.host instanceof ItemStack
+				? "itemStack"
+				: "world";
 		return `Database[${this.id} @ ${host}]`;
 	}
 
