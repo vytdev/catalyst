@@ -13,6 +13,12 @@ rm -rf "$out"/*
 
 # run typescript
 npx tsc
+exit_code=$?
+
+# compile error, stop here
+if [ "$exit_code" -ne '0' ] ; then
+	exit "$exit_code"
+fi
 
 # copy additional files
 for file in $( find "$src" -type f ! -name "*.[jt]s" ) ; do
