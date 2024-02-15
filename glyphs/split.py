@@ -4,7 +4,7 @@ from PIL import Image
 for r in range(0, 255):
 	# the glyph name
 	folder = f"glyph_{r:02X}"
-	source = folder + ".png"
+	source = os.path.join("..", "RP", "font", folder + ".png")
 
 	# check if glyph exists
 	if not os.path.isfile(source):

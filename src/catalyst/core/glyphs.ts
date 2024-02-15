@@ -146,4 +146,16 @@ export const glyphs: Record<string, string> = {
 	crafting_table: "\uE10A",
 	furnace: "\uE10B",
 	heart: "\uE10C",
+
+	// custom glyphs
+	board: "\uE10D",
+	monitor: "\uE10E",
+	barrier: "\uE10F",
+	check: "\uE110",
+	plus: "\uE112",
+	minus: "\uE113",
+	key: "\uE114",
+	file: "\uE115",
+	folder: "\uE116",
+	code: "\uE117",
 };

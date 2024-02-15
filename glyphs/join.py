@@ -4,7 +4,7 @@ from PIL import Image
 for r in range(0, 255):
 	# the glyph name
 	folder = f"glyph_{r:02X}"
-	source = folder + ".png"
+	source = os.path.join("..", "RP", "font", folder + ".png")
 
 	# check if folder exists
 	if not os.path.isdir(folder):
@@ -15,11 +15,13 @@ for r in range(0, 255):
 	if len(sprites) == 0:
 		continue
 
+	# get the size of the first sprite glyph
 	sprite_size = Image.open(os.path.join(folder, sprites[0])).size[0]
 
+	# new glyph sprite sheet
 	sheet = Image.new("RGBA", (sprite_size * 16, sprite_size * 16), (0, 0, 0, 0))
 
-	# split the glyph sheet
+	# iterate
 	for x in range(16):
 		for y in range(16):
 			# path to sprite

@@ -15,6 +15,14 @@ node_modules/
 .npm
 .node_repl_history
 
+# python
+__pycache__
+*.pyc
+
 # builds
 /BP/scripts
 catalyst_*.mcaddon
+
+# ignore generated glyph sprite sheets
+glyph_[0-9a-fA-F][0-9a-fA-F].png
+
