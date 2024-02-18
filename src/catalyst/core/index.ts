@@ -24,6 +24,7 @@ export * from "./events.js";
 export * from "./format.js";
 export * from "./forms.js";
 export * from "./glyphs.js";
+export * from "./locale.js";
 export * from "./logger.js";
 export * from "./math.js";
 export * from "./plugin.js";

@@ -10,21 +10,13 @@ import { formats } from "./format.js";
 /**
  * broadcast a message to the world, or to specific player(s)
  * @param msg the message
- * @param [color] color of the exclamation mark
  * @param [target] player(s)
  */
-export function broadcast(msg: string, color?: string, target?: Player | Player[]): void {
-	let txt = "";
-	// §6[<color>§l!§r§6]§r
-	txt += formats.dark_gray + "[" + (color || formats.yellow) + formats.bold +
-		"!" + formats.reset + formats.dark_gray + "]" + formats.reset + " ";
-	// the message
-	txt += msg;
-
+export function broadcast(msg: string, target?: Player | Player[]): void {
 	// broadcast
-	if (target instanceof Player) target.sendMessage(txt);
-	else if (target instanceof Array) target.forEach(plr => plr.sendMessage(txt));
-	else world.sendMessage(txt);
+	if (target instanceof Player) target.sendMessage(msg);
+	else if (target instanceof Array) target.forEach(plr => plr.sendMessage(msg));
+	else world.sendMessage(msg);
 }
 
 /**
@@ -40,6 +32,15 @@ export function message(msg: string, target?: Player | Player[]): void {
 	if (target instanceof Player) queueCommand(cmd, target);
 	else if (target instanceof Array) target.forEach(plr => queueCommand(cmd, plr));
 	else world.getAllPlayers()?.forEach(plr => queueCommand(cmd, plr));
+}
+
+/**
+ * player instance by name
+ * @param name the name of player
+ * @returns Player class
+ */
+export function getPlayerByName(name: string): Player {
+	return world.getAllPlayers()?.find(v => v.name == name);
 }
 
 // command queue
