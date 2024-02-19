@@ -152,6 +152,7 @@ export const glyphs: Record<string, string> = {
 	monitor: "\uE10E",
 	barrier: "\uE10F",
 	check: "\uE110",
+	x: "\uE111",
 	plus: "\uE112",
 	minus: "\uE113",
 	key: "\uE114",
