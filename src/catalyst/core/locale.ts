@@ -146,8 +146,13 @@ export function parseFormat(format: string): formatTokens {
 		if (token.plusSign) token.spaceSign = false;
 		if (token.leftAlign) token.zeroPad = false;
 
+		// report incomplete format
+		const incompleteFormat = () => {
+			throw new TypeError('incomplete format specifier near: ' + format.slice(placeHolderStart));
+		};
+
 		// incomplete format
-		if (!c) throw new TypeError('incomplete format specifier');
+		if (!c) incompleteFormat();
 
 		// min field width
 		if (c == '*') {
@@ -164,7 +169,7 @@ export function parseFormat(format: string): formatTokens {
 		// precision
 		if (c == '.') {
 			c = format[i++];
-			if (!c) throw new TypeError('incomplete format specifier');
+			if (!c) incompleteFormat();
 			// get the value
 			if (c == '*') {
 				// get value from args
@@ -180,7 +185,7 @@ export function parseFormat(format: string): formatTokens {
 
 		// length modifier
 		if ('hljztL'.includes(c)) {
-			if (!c) throw new TypeError('incomplete format specifier');
+			if (!c) incompleteFormat();
 			token.lengthModifier = c as formatPlaceHolder['lengthModifier'];
 			c = format[i++];
 			// double h or double l
@@ -194,7 +199,7 @@ export function parseFormat(format: string): formatTokens {
 		}
 
 		// incomplete format
-		if (!c) throw new TypeError('incomplete format specifier');
+		if (!c) incompleteFormat();
 
 		// check if c is a specifier
 		if (!'%?csdiobxXufFeEaAgG'.includes(c))
@@ -217,6 +222,13 @@ export function parseFormat(format: string): formatTokens {
 		// a token
 		else tokens.push(token);
 
+		// placeholders like '%1$*.*s'
+		if (token.argIndex != -1 && (token.minFieldWidth == '*' || token.precision == '*'))
+			throw new TypeError(
+				`the placeholder '${token.text}' specifies a parameter at a specific ` +
+				'index, but the minimum width field and/or the precision is specified ' +
+				'separately, leading to ambiguity'
+			);
 	}
 
 	// the result
@@ -239,7 +251,7 @@ export function applyFormat(format: formatTokens, ...args: any[]): string {
 		if (!args)
 			throw new TypeError('insufficient arguments');
 		if (typeof idx == 'number' && idx > args.length)
-			throw new TypeError('missing format argument: ' + idx);
+			throw new TypeError('missing format argument at index ' + idx);
 		if (argIdx >= args.length) throw new TypeError('insufficient arguments');
 		return args[idx != null ? (idx - 1) : argIdx++];
 	};
@@ -263,14 +275,14 @@ export function applyFormat(format: formatTokens, ...args: any[]): string {
 			minFieldWidth = getNextArg();
 			// validate value
 			if (typeof minFieldWidth != 'number')
-				throw new TypeError('expected number for minimum field width');
+				throw new TypeError('expected a number for minimum field width in: ' + tok.text);
 		}
 		// precision
 		if (precision == '*') {
 			precision = getNextArg();
 			// validate value
 			if (typeof precision != 'number')
-				throw new TypeError('expected number for precision');
+				throw new TypeError('expected a number for precision in: ' + tok.text);
 		}
 
 		// the subject argument
@@ -283,7 +295,10 @@ export function applyFormat(format: formatTokens, ...args: any[]): string {
 
 		// incompatible types error
 		const invalidArg = () => {
-			throw new TypeError(`type ${typeof source} is not assignable to placeholder ${tok.text}`);
+			throw new TypeError(
+				`argument at index ${tok.argIndex == -1 ? argIdx : tok.argIndex} with ` +
+				`type ${typeof source} is not assignable to placeholder ${tok.text}`
+			);
 		}
 
 		// automatic type conversion
@@ -555,4 +570,3 @@ export function applyFormat(format: formatTokens, ...args: any[]): string {
 export function formatString(format: string, ...args: any[]): string {
 	return applyFormat(parseFormat(format), ...args);
 }
-
