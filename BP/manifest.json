@@ -4,7 +4,7 @@
 	"header": {
 		"name": "Catalyst (BEH)",
 		"description": "A simple add-on to enchance your vanilla Minecraft Bedrock SMPs",
-		"version": "0.2.0-beta.1",
+		"version": "0.2.0-beta.2",
 		"uuid": "550b753c-39bd-4cba-98ce-95ccf8a9256c",
 		"min_engine_version": [ 1, 20, 50 ]
 	},
@@ -29,7 +29,7 @@
 	"dependencies": [
 		{
 			"uuid": "9541e7d4-12a5-4908-ab76-5095fb4c1368",
-			"version": "0.2.0-beta.1"
+			"version": "0.2.0-beta.2"
 		},
 		{
 			"module_name": "@minecraft/server",
