@@ -74,3 +74,38 @@ export function formatNumber(n: number): string {
 	// thx: https://stackoverflow.com/questions/2901102
 	return n.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
 }
+
+/**
+ * convert number into roman numeral
+ * @param n the number
+ * @returns result string
+ */
+export function toRomanNumeral(num: number) {
+	// NOTES:
+	// - no negative
+	// - no decimals
+	// - no zeros
+
+	// num is higher than the representable roman number
+	if (num > 3999) return num.toString();
+
+	// in minecraft, unicode diacritic `\u0305` (macron) may not display
+	// correctly, better to not add them
+
+	// i used recursion because its easy to debug :)
+	if(num >= 1000) return 'M'  + toRomanNumeral(num - 1000);
+	if(num >=  900) return 'CM' + toRomanNumeral(num - 900);
+	if(num >=  500) return 'D'  + toRomanNumeral(num - 500);
+	if(num >=  400) return 'CD' + toRomanNumeral(num - 400);
+	if(num >=  100) return 'C'  + toRomanNumeral(num - 100);
+	if(num >=   90) return 'XC' + toRomanNumeral(num - 90);
+	if(num >=   50) return 'L'  + toRomanNumeral(num - 50);
+	if(num >=   40) return 'XL' + toRomanNumeral(num - 40);
+	if(num >=   10) return 'X'  + toRomanNumeral(num - 10);
+	if(num >=    9) return 'IX' + toRomanNumeral(num - 9);
+	if(num >=    5) return 'V'  + toRomanNumeral(num - 5);
+	if(num >=    4) return 'IV' + toRomanNumeral(num - 4);
+	if(num >=    1) return 'I'  + toRomanNumeral(num - 1);
+
+	return '';
+}
