@@ -1,6 +1,7 @@
 /**
  * localization helpers
  */
+import { toRomanNumeral } from "./utils.js";
 
 /**
  * a string wrapper for translatable strings
@@ -42,7 +43,7 @@ export interface formatPlaceHolder {
 	/** length modifier */
 	lengthModifier?: 'hh'|'h'|'ll'|'l'|'j'|'z'|'t'|'L',
 	/** conversion specifier */
-	specifier: '%'|'?'|'c'|'s'|'d'|'i'|'o'|'b'|'x'|'X'|'u'|'f'|'F'|'e'|'E'|'a'|'A'|'g'|'G',
+	specifier: '%'|'?'|'c'|'s'|'d'|'i'|'o'|'b'|'x'|'X'|'u'|'f'|'F'|'e'|'E'|'a'|'A'|'g'|'G'|'m',
 
 	// flags
 	alternate: boolean, // #
@@ -202,7 +203,7 @@ export function parseFormat(format: string): formatTokens {
 		if (!c) incompleteFormat();
 
 		// check if c is a specifier
-		if (!'%?csdiobxXufFeEaAgG'.includes(c))
+		if (!'%?csdiobxXufFeEaAgGm'.includes(c))
 			throw new TypeError('unknown conversion specifier: ' + c);
 
 		// the specifier
@@ -290,7 +291,7 @@ export function applyFormat(format: formatTokens, ...args: any[]): string {
 		let arg = '';
 
 		// validate conversion specifier
-		if (!'%?csdiobxXufFeEaAgG'.includes(spec))
+		if (!'%?csdiobxXufFeEaAgGm'.includes(spec))
 			throw new TypeError('unknown conversion specifier: ' + spec);
 
 		// incompatible types error
@@ -545,6 +546,16 @@ export function applyFormat(format: formatTokens, ...args: any[]): string {
 			arg += source == 0 ? '0' : Math.abs(magnitude).toString().padStart(1, '0');
 			// upper case
 			if (spec == 'A') arg = arg.toUpperCase();
+		}
+
+		// 'm' specifier (custom)
+		// write roman numerals
+		if (spec == 'm') {
+			if (typeof source != 'number') invalidArg();
+			// generate roman numerals
+			arg = toRomanNumeral(source);
+			// use lowercase
+			if (tok.alternate) arg = arg.toLowerCase();
 		}
 
 		// padding

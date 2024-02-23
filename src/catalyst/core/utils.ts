@@ -80,7 +80,7 @@ export function formatNumber(n: number): string {
  * @param n the number
  * @returns result string
  */
-export function toRomanNumeral(num: number) {
+export function toRomanNumeral(num: number): string {
 	// NOTES:
 	// - no negative
 	// - no decimals
