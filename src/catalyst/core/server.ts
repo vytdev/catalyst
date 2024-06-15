@@ -77,11 +77,11 @@ export function runCommand(cmd: string, target?: Entity | Dimension): CommandRes
 
 // listen for internal events
 world.beforeEvents.chatSend.subscribe(ev => events.dispatchEvent("beforeChatSend", ev));
-world.beforeEvents.dataDrivenEntityTriggerEvent.subscribe(ev => events.dispatchEvent("beforeDataDrivenEntityTriggerEvent", ev));
+//world.beforeEvents.dataDrivenEntityTriggerEvent.subscribe(ev => events.dispatchEvent("beforeDataDrivenEntityTriggerEvent", ev));
 world.beforeEvents.effectAdd.subscribe(ev => events.dispatchEvent("beforeEffectAdd", ev));
 world.beforeEvents.entityRemove.subscribe(ev => events.dispatchEvent("beforeEntityRemove", ev));
 world.beforeEvents.explosion.subscribe(ev => events.dispatchEvent("beforeExplosion", ev));
-world.beforeEvents.itemDefinitionEvent.subscribe(ev => events.dispatchEvent("beforeItemDefinitionEvent", ev));
+//world.beforeEvents.itemDefinitionEvent.subscribe(ev => events.dispatchEvent("beforeItemDefinitionEvent", ev));
 world.beforeEvents.itemUse.subscribe(ev => events.dispatchEvent("beforeItemUse", ev));
 world.beforeEvents.itemUseOn.subscribe(ev => events.dispatchEvent("beforeItemUseOn", ev));
 //world.beforeEvents.pistonActivate.subscribe(ev => events.dispatchEvent("beforePistonActivate", ev));
@@ -105,7 +105,7 @@ world.afterEvents.entityRemove.subscribe(ev => events.dispatchEvent("afterEntity
 world.afterEvents.entitySpawn.subscribe(ev => events.dispatchEvent("afterEntitySpawn", ev));
 world.afterEvents.explosion.subscribe(ev => events.dispatchEvent("afterExplosion", ev));
 world.afterEvents.itemCompleteUse.subscribe(ev => events.dispatchEvent("afterItemCompleteUse", ev));
-world.afterEvents.itemDefinitionEvent.subscribe(ev => events.dispatchEvent("afterItemDefinitionEvent", ev));
+//world.afterEvents.itemDefinitionEvent.subscribe(ev => events.dispatchEvent("afterItemDefinitionEvent", ev));
 world.afterEvents.itemReleaseUse.subscribe(ev => events.dispatchEvent("afterItemReleaseUse", ev));
 world.afterEvents.itemStartUse.subscribe(ev => events.dispatchEvent("afterItemStartUse", ev));
 world.afterEvents.itemStartUseOn.subscribe(ev => events.dispatchEvent("afterItemStartUseOn", ev));
