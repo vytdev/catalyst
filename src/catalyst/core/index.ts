@@ -18,6 +18,7 @@ export const events = new EventManager<defaultEvents>();
 export const VERSION = "0.3.0-beta.1";
 
 // preload and export modules
+export * from "./cmdparser.js";
 export * from "./command.js";
 export * from "./database.js";
 export * from "./events.js";
