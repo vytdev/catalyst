@@ -69,6 +69,7 @@ export function parseCommand(info: commandSub, cmd: string, argv: commandToken[]
   // internal function to process a command or sub-command
   function processCmd(idx: number, cmdDef: commandSub, result: parseResult): number {
     let argIdx = 0;
+    let processedSubCmd = false;
 
     for ( ; idx < argv.length; idx++) {
       const arg = argv[idx];
@@ -223,6 +224,7 @@ export function parseCommand(info: commandSub, cmd: string, argv: commandToken[]
         }
 
         // process sub-commands
+        processedSubCmd = true;
         const unNamedSubs: commandSub[] = [];
         let done = false;
 
@@ -302,6 +304,26 @@ export function parseCommand(info: commandSub, cmd: string, argv: commandToken[]
       }
     }
 
+    // if subcommands haven't been processed, try processing unnamed ones
+    if (!processedSubCmd && cmdDef.subs) {
+      processedSubCmd = true;
+      for (const subDef of cmdDef.subs) {
+        if (subDef.name != '') continue;
+
+        try {
+          const subResult: parseResult = {};
+          processCmd(idx, subDef, subResult);
+
+          // processCmd didn't throw any error, subcommand succeded
+          for (const k in subResult) result[k] = subResult[k];
+          break;
+
+        } catch (e) {
+          continue;
+        }
+      }
+    }
+
     // command/sub-command processed successfully
     result[cmdDef.dest] = true;
 
@@ -314,6 +336,114 @@ export function parseCommand(info: commandSub, cmd: string, argv: commandToken[]
   return result;
 }
 
+/**
+ * give command combination tips
+ * @param cmd the command info
+ * @returns {string[]} the result
+ */
+export function formatHelp(cmd: commandSub): string[] {
+  const output: string[] = [];
+  const parsedSubs: commandSub[] = [];
+
+  // process arg
+  function procArg(arg: commandArg): string {
+    let str = "";
+    str += arg.required ? '<' : '[';
+    str += arg.name ?? arg.dest;
+    str += ': ';
+    str += typeof arg.type == 'function'
+      ? arg.type.name
+      : arg.type;
+    str += arg.required ? '>' : ']';
+    return str;
+  }
+
+  // sub-command
+  function procSub(base: string, sub: commandSub) {
+    // prevents infinite recursion fot cyclic references
+    if (parsedSubs.includes(sub)) {
+      if (sub.name.length)
+        output.push(base + ' ...');
+      return;
+    }
+    parsedSubs.push(sub);
+
+    // sub-command base for text
+    let subBase = '';
+
+    // process flags
+    if (sub.flags) {
+
+      // process short flags
+      let shortFlags = '';
+      for (const flag of sub.flags)
+        if (flag.short)
+          shortFlags += flag.short[0];
+      shortFlags = shortFlags.split('').sort().join('');
+      if (shortFlags.length)
+        subBase += ' [-' + shortFlags + ']';
+
+      // process long flags
+      for (const flag of sub.flags)
+        if (flag.long) {
+          subBase = ' [--' + flag.long;
+
+          // process flag args
+          if (flag.args)
+            for (const arg of flag.args)
+              subBase += ' ' + procArg(arg);
+
+          subBase += ']';
+        }
+    }
+
+    // process args
+    if (sub.args)
+      for (const arg of sub.args)
+        subBase += ' ' + procArg(arg);
+
+    // trim whitespace on subBase
+    subBase = subBase.trim();
+
+    // add sub-command line by name
+    function addName(name: string) {
+      let line = base;
+      // named sub-command
+      if (name.length)
+        line += ' ' + name;
+      line += ' ' + subBase;
+      line = line.trim();
+
+      // make sure the line didn't repeated there
+      if (output.includes(line))
+        return;
+
+      // push the name
+      output.push(line);
+
+      // process sub-sub-commands
+      if (sub.subs)
+        for (const nsub of sub.subs)
+          procSub(line, nsub);
+    }
+
+    // the actual sub-command name
+    addName(sub.name);
+    // for name aliases
+    if (sub.aliases)
+      for (const name of sub.aliases)
+        addName(name);
+  }
+
+  procSub('', cmd);
+  return output;
+}
+
 // built-in type parsers
 registerCommandTypeParser('string', (argv, argDef) => ({ value: argv[0]?.text }));
+registerCommandTypeParser('int', (argv, argDef) => {
+  if (!/^[+-]?(?:0|[1-9][0-9]*)$/.test(argv[0]?.text))
+    throw 'not a valid integer: ' + argv[0]?.text;
+  return { value: +argv[0]?.text };
+});
 

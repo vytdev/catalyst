@@ -12,6 +12,14 @@ import { ChatSendBeforeEvent } from "@minecraft/server";
 
 type customCallback = (args: parseResult, ev: ChatSendBeforeEvent) => void;
 
+export const cmdInfos: commandSub[] = [];
+
+/**
+ * register a command
+ * @param data command parsing rules
+ * @param callback command dispatch function
+ * @returns {string} the name of this command
+ */
 export function makeCommand(data: commandSub, callback: customCallback): string {
   registerCommand({
     name: data.name,
@@ -20,10 +28,20 @@ export function makeCommand(data: commandSub, callback: customCallback): string 
   }, (argv, ev) => {
     callback(parseCommand(data, ev.message, argv), ev);
   });
-
+  cmdInfos.push(data);
   return data.name;
 }
 
+/**
+ * get a command info by name or alias
+ * @param name the name or alias
+ * @returns {commandSub} the command info
+ */
+export function getCmdInfo(name: string): commandSub {
+  return cmdInfos.find(v => v.name == name || v.aliases?.includes(name));
+}
+
 // import commands
-import "./data.js";
+import("./data.js");
+import("./help.js");
 
