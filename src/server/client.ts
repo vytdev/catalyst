@@ -1,4 +1,4 @@
-import { Player, system, world } from "@minecraft/server";
+import { GameMode, Player, system, world } from "@minecraft/server";
 import {
   Database,
   events,
@@ -193,7 +193,7 @@ events.on("afterEntityHurt", ev => {
   getClientById(ev.damageSource.damagingEntity.id)?.setCombatTag();
 });
 
-// update sidebar
+// loop checks and sidebar update
 system.runInterval(() => {
   // get the date
   const d = new Date();
@@ -203,6 +203,17 @@ system.runInterval(() => {
     d.getFullYear().toString();
 
   clients.forEach(v => {
+    // non-admin players should not have op permissions
+    // and should always be in survival mode
+    if (!v.isAdmin) {
+      v.player.setOp(false);
+      v.player.setGameMode(GameMode.survival);
+    }
+    // admin players
+    else {
+      v.player.setOp(true);
+    }
+
     // update playtime
     v.db.set('playtime', v.db.get('playtime', 0) + 1)
     v.db.save();
