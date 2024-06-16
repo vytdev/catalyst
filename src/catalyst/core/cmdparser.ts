@@ -440,15 +440,23 @@ export function formatHelp(cmd: commandSub): string[] {
 }
 
 // built-in type parsers
-registerCommandTypeParser('string', (argv, argDef) => ({ value: argv[0]?.text }));
+registerCommandTypeParser('string', (argv, argDef) => {
+  return { value: argv[0]?.text };
+});
 registerCommandTypeParser('int', (argv, argDef) => {
-  if (!/^[+-]?(?:0|[1-9][0-9]*)$/.test(argv[0]?.text))
-    throw 'not a valid integer: ' + argv[0]?.text;
+  if (!/^[+-]?(?:0|[1-9][0-9]*)$/.test(argv[0]?.text)) {
+    const err = new CommandError('not a valid integer: ' + argv[0]?.text);
+    err.token = argv[0];
+    throw err;
+  }
   return { value: +argv[0]?.text };
 });
 registerCommandTypeParser('boolean', (argv, argDef) => {
-  if (!/^(true|false)$/.test(argv[0]?.text))
-    throw 'not a valid boolean';
+  if (!/^(true|false)$/.test(argv[0]?.text)) {
+    const err = new CommandError('not a valid boolean');
+    err.token = argv[0];
+    throw err;
+  }
   return { value: argv[0]?.text == 'true' };
 })
 

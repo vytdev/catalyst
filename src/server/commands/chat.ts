@@ -23,6 +23,6 @@ makeCommand(info, (args, ev, plr) => {
 
   // toggle
   toggleChat(args.val);
-  broadcast(`§echats has been ${args.val ? '§aenabled' : '§cdisabled'} by §6${plr.name}§r`);
+  broadcast(`§echats has been ${args.val ? '§aenabled' : '§cdisabled'}§e by §6${plr.name}§r`);
 });
 

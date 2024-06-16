@@ -5,6 +5,7 @@ import {
   message,
   broadcast,
 } from "../catalyst/index.js";
+import { isPlayerAdmin } from "./utils.js";
 import profanity from "./profanity.js";
 
 let isChatEnabled = true;
@@ -20,13 +21,13 @@ events.on("beforeChatSend", ev => {
   // cancel broadcast
   ev.cancel = true;
 
-  if (!isChatEnabled && !ev.sender.hasTag(config.adminPerm)) {
+  if (!isChatEnabled && !isPlayerAdmin(ev.sender)) {
     broadcast('§echat is currently disabled!§r', ev.sender);
     return;
   }
 
   let msg: string = '§¶';
-  if (ev.sender.hasTag(config.adminPerm))
+  if (isPlayerAdmin(ev.sender))
     msg += '§7[§cadmin§7]§r ';
   msg += '§7' + ev.sender.name + "§r: ";
 

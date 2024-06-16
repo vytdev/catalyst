@@ -1,5 +1,6 @@
 // some utility...
 import { Client } from "./client.js";
+import { Player } from "@minecraft/server";
 
 /**
  * colorize json objects
@@ -30,5 +31,23 @@ export function assertIsAdmin(plr: Client) {
 export function assertNotInCombat(plr: Client) {
   if (plr.combatTag && !plr.isAdmin)
     throw 'You cannot do this action while in combat mode!';
+}
+
+/**
+ * returns whether a player is an admin
+ * @param plr the player
+ * @returns {boolean} the result
+ */
+export function isPlayerAdmin(plr: Player): boolean {
+  return !!plr.getDynamicProperty('admin');
+}
+
+/**
+ * set a player admin or not
+ * @param plr the player
+ * @param val value
+ */
+export function setPlayerAdmin(plr: Player, val: boolean): void {
+  plr.setDynamicProperty('admin', val);
 }
 

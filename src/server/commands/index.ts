@@ -47,5 +47,6 @@ import("./chat.js");
 import("./data.js");
 import("./help.js");
 import("./kit.js");
+import("./perm.js");
 import("./warp.js");
 

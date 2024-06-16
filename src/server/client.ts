@@ -10,6 +10,7 @@ import {
 } from "../catalyst/index.js";
 import { smpName, combatTime } from "./index.js";
 import { ranks } from "./ranks.js";
+import { isPlayerAdmin, setPlayerAdmin } from "./utils.js";
 
 /**
  * map of online clients
@@ -101,7 +102,8 @@ export class Client {
   /**
    * whether this client is an admin
    */
-  public get isAdmin(): boolean { return this.player.hasTag(config.adminPerm); }
+  public get isAdmin(): boolean { return isPlayerAdmin(this.player); }
+  public set isAdmin(val: boolean) { setPlayerAdmin(this.player, val); }
 
   /**
    * message the player

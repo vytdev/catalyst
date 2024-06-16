@@ -11,6 +11,16 @@ export const logger = new Logger();
 export const smpName = "Infinity";
 
 /**
+ * the name of the owner
+ */
+export const ownerName = "vytdev";
+
+/**
+ * password to access admin permission
+ */
+export const controlPassword = "hello_world";
+
+/**
  * combat tag time (in ticks)
  */
 export const combatTime = 20 * 15; // 15 seconds
@@ -32,3 +42,4 @@ export const kits: { name: string }[] = [
 import "./client.js";
 import "./chats.js";
 import "./commands/index.js";
+
