@@ -45,4 +45,5 @@ export function getCmdInfo(name: string): commandSub {
 // import commands
 import("./data.js");
 import("./help.js");
+import("./warp.js");
 

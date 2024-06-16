@@ -2,7 +2,7 @@ import { makeCommand } from "./index.js";
 import { world } from "@minecraft/server";
 import { Database } from "../../catalyst/index.js";
 import { getClientByName, Client } from "../client.js";
-import { colorize } from "../utils.js";
+import { colorize, assertIsAdmin } from "../utils.js";
 import config from "../../catalyst/config.js"
 
 makeCommand({
@@ -74,8 +74,7 @@ makeCommand({
 }, (args, ev, plr) => {
   if (!ev) throw "api!";
 
-  if (!plr.isAdmin)
-    throw "You have no permission to execute this command!";
+  assertIsAdmin(plr);
 
   // help
   if ([

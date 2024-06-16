@@ -184,7 +184,8 @@ events.on("afterEntityDie", ev => {
 events.on("afterEntityHurt", ev => {
   if (
     ev.hurtEntity.typeId != "minecraft:player" ||
-    ev.damageSource.damagingEntity?.typeId != "minecraft:player"
+    ev.damageSource.damagingEntity?.typeId != "minecraft:player" ||
+    ev.hurtEntity.id == ev.damageSource.damagingEntity?.id
   ) return;
   // set combat tag
   getClientById(ev.hurtEntity.id)?.setCombatTag();
