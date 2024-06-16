@@ -343,7 +343,7 @@ export function parseCommand(info: commandSub, cmd: string, argv: commandToken[]
  */
 export function formatHelp(cmd: commandSub): string[] {
   const output: string[] = [];
-  const parsedSubs: commandSub[] = [];
+  //const parsedSubs: commandSub[] = [];
 
   // process arg
   function procArg(arg: commandArg): string {
@@ -360,13 +360,13 @@ export function formatHelp(cmd: commandSub): string[] {
 
   // sub-command
   function procSub(base: string, sub: commandSub) {
-    // prevents infinite recursion fot cyclic references
-    if (parsedSubs.includes(sub)) {
-      if (sub.name.length)
-        output.push(base + ' ...');
-      return;
-    }
-    parsedSubs.push(sub);
+    // prevents infinite recursion for cyclic references
+    //if (parsedSubs.includes(sub)) {
+    //  if (sub.name.length)
+    //    output.push(base + ' ...');
+    //  return;
+    //}
+    //parsedSubs.push(sub);
 
     // sub-command base for text
     let subBase = '';
