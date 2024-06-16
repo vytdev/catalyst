@@ -220,7 +220,7 @@ system.runInterval(() => {
     if (v.combatTag) {
       v.combatTimer--;
       if (v.combatTimer > 0)
-        msg += `§7  Combat tag: §c${msToString(v.combatTimer)}\n`;
+        msg += `§7  Combat tag: §c${msToString(v.combatTimer * 50 + 1000 /* +1s */)}\n`;
       else
         v.player.onScreenDisplay.setTitle('§aYour combat tag is expired!§r');
     }
