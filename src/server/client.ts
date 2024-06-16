@@ -1,6 +1,14 @@
 import { Player, system, world } from "@minecraft/server";
-import { Database, events, message, msToString, formatNumber } from "../catalyst/index.js";
-import { smpName } from "./index.js";
+import {
+  Database,
+  events,
+  message,
+  msToString,
+  formatNumber,
+  getPlayerByName,
+  config
+} from "../catalyst/index.js";
+import { smpName, combatTime } from "./index.js";
 import { ranks } from "./ranks.js";
 
 /**
@@ -84,6 +92,21 @@ export class Client {
    * additional text on sidebar
    */
   public sidebarTail: string = "";
+  /**
+   * player's combat tag timer
+   */
+  public combatTimer: number = 0;
+  public get combatTag(): boolean { return this.combatTimer > 0; }
+  public setCombatTag() { this.combatTimer = combatTime; }
+  /**
+   * whether this client is an admin
+   */
+  public get isAdmin(): boolean { return this.player.hasTag(config.adminPerm); }
+
+  /**
+   * message the player
+   */
+  public msg(txt: string) { this.player.sendMessage(txt); }
 }
 
 /**
@@ -101,7 +124,25 @@ export function getClientByName(name: string): Client | undefined {
 
   // create new client class for player
   if (!client) {
-    const player = world.getAllPlayers()?.find(v => v.name == name);
+    const player = getPlayerByName(name);
+    if (!player) return;
+    client = new Client(player);
+  }
+
+  return client;
+}
+
+/**
+ * get client by id
+ * @param id the player id
+ * @returns client class, or undefined
+ */
+export function getClientById(id: string): Client | undefined {
+  let client = clients.get(id);
+
+  // create new client class for player
+  if (!client) {
+    const player = world.getAllPlayers()?.find(v => v.id == id);
     if (!player) return;
     client = new Client(player);
   }
@@ -123,7 +164,7 @@ events.on("afterPlayerSpawn", ev => {
 events.on("beforePlayerLeave", ev => {
   const client = clients.get(ev.player.id);
   // save player db
-  client.db.save();
+  client?.db.save();
   // remove from the online map
   clients.delete(ev.player.id);
 });
@@ -132,12 +173,22 @@ events.on("beforePlayerLeave", ev => {
 events.on("afterEntityDie", ev => {
   // add deaths
   if (ev.deadEntity.typeId != "minecraft:player") return;
-  const deadPlayer = clients.get(ev.deadEntity.id);
+  const deadPlayer = getClientById(ev.deadEntity.id);
   deadPlayer.deaths++;
   // add kills
   if (ev.damageSource.damagingEntity?.typeId != "minecraft:player") return;
-  const killer = clients.get(ev.damageSource.damagingEntity.id);
+  const killer = getClientById(ev.damageSource.damagingEntity.id);
   killer.kills++;
+});
+
+events.on("afterEntityHurt", ev => {
+  if (
+    ev.hurtEntity.typeId != "minecraft:player" ||
+    ev.damageSource.damagingEntity?.typeId != "minecraft:player"
+  ) return;
+  // set combat tag
+  getClientById(ev.hurtEntity.id)?.setCombatTag();
+  getClientById(ev.damageSource.damagingEntity.id)?.setCombatTag();
 });
 
 // update sidebar
@@ -153,8 +204,9 @@ system.runInterval(() => {
     // update playtime
     v.db.set('playtime', v.db.get('playtime', 0) + 1)
     v.db.save();
-    // update stats
-    v.player.onScreenDisplay.setActionBar(
+
+    // construct the sidebar msg
+    let msg =
       `§b§l${smpName} SMP§r §7(${date})\n` +
       `§7  Name: §1${v.name}\n` +
       `§7  Rank: ${ranks[v.rank]?.name || "§8Unknown"}\n` +
@@ -162,9 +214,22 @@ system.runInterval(() => {
       `§7  Playtime: §3${msToString(v.playtime * 50)}\n` +
       `§7  Kills: §d${formatNumber(v.kills)}\n` +
       `§7  Deaths: §4${formatNumber(v.deaths)}\n` +
-      `§7  Bounty: §e$${formatNumber(v.bounty)}\n` +
-      v.sidebarTail
-    );
+      `§7  Bounty: §e$${formatNumber(v.bounty)}\n`;
+
+    // combat timer
+    if (v.combatTag) {
+      v.combatTimer--;
+      if (v.combatTimer > 0)
+        msg += `§c  Combat tag: §e${msToString(v.combatTimer)}\n`;
+      else
+        v.player.onScreenDisplay.setTitle('§aYour combat tag is expired!§r');
+    }
+
+    // additional sidebar texts
+    msg += v.sidebarTail;
+
+    // update bar
+    v.player.onScreenDisplay.setActionBar(msg);
   });
 });
 

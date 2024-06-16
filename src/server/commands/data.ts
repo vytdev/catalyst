@@ -11,10 +11,6 @@ makeCommand({
   help: "Manage databases",
   subs: [
     {
-      name: "help",
-      dest: "help",
-    },
-    {
       name: "set",
       dest: "set",
       args: [
@@ -75,27 +71,20 @@ makeCommand({
       ],
     },
   ]
-}, (args, ev) => {
+}, (args, ev, plr) => {
   if (!ev) throw "api!";
 
+  if (!plr.isAdmin)
+    throw "You have no permission to execute this command!";
+
   // help
-  if (args['help'] || [
+  if ([
     "set", "get","del", "clear", "show", "create", "destroy"
   ].every(v => !args[v])) {
-    ev.sender.sendMessage("§eManage databases!");
-    ev.sender.sendMessage("§e\\db help - show this help");
-    ev.sender.sendMessage("§e\\db set <subject> <id> <key> <value>");
-    ev.sender.sendMessage("§e\\db get <subject> <id> <key>");
-    ev.sender.sendMessage("§e\\db del <subject> <id> <key>");
-    ev.sender.sendMessage("§e\\db clear <subject> <id>");
-    ev.sender.sendMessage("§e\\db show <subject> <id>");
-    ev.sender.sendMessage("§e\\db create <subject> <id>");
-    ev.sender.sendMessage("§e\\db destroy <subject> <id>");
+    plr.msg(`§ePlease enter action command!`);
+    plr.msg(`§eType ${config.commandPrefix}help for more info.`);
     return;
   }
-
-  if (!ev.sender.hasTag(config.adminPerm))
-    throw "You have no permission to execute this command!";
 
   // get database host
   const subject = args['subject'] == 'world' ? world : getClientByName(args['subject']);
@@ -104,7 +93,7 @@ makeCommand({
   // the database
   const db = subject instanceof Client ? subject.db : new Database(id, subject);
   if (!args['create']) db.load();
-  else ev.sender.sendMessage('§aDatabase has been created! ' + db);
+  else plr.msg('§aDatabase has been created! ' + db);
 
   // set
   if (args['set']) {
@@ -121,7 +110,7 @@ makeCommand({
     }
 
     db.set(key, json);
-    ev.sender.sendMessage('§aKey has been set!');
+    plr.msg('§aKey has been set!');
   }
 
   // get
@@ -129,7 +118,7 @@ makeCommand({
     const key = args['key'];
     if (!key) throw "key not given";
 
-    ev.sender.sendMessage(colorize(db.get(key)));
+    plr.msg(colorize(db.get(key)));
     return;
   }
 
@@ -138,26 +127,26 @@ makeCommand({
     const key = args['key'];
     if (!key) throw "key not given";
 
-    if (db.del(key)) ev.sender.sendMessage('§aKey has been deleted!');
-    else ev.sender.sendMessage('§cFailed to delete key!');
+    if (db.del(key)) plr.msg('§aKey has been deleted!');
+    else plr.msg('§cFailed to delete key!');
   }
 
   // clear
   if (args['clear']) {
     db.clear();
-    ev.sender.sendMessage('§aDatabase has been cleared!')
+    plr.msg('§aDatabase has been cleared!')
   }
 
   // show
   if (args['show']) {
-    ev.sender.sendMessage(colorize(db['_cache']));
+    plr.msg(colorize(db['_cache']));
     return;
   }
 
   // destroy
   if (args['destroy']) {
     db.destroy();
-    ev.sender.sendMessage('§aDatabase has been destroyed!');
+    plr.msg('§aDatabase has been destroyed!');
     return;
   }
 

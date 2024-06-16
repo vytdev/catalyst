@@ -8,9 +8,10 @@ import {
   registerCommandTypeParser,
 } from "../../catalyst/index.js";
 import { commandSub, parseResult } from "../../catalyst/@types/commands";
+import { Client, getClientById } from "../client.js";
 import { ChatSendBeforeEvent } from "@minecraft/server";
 
-type customCallback = (args: parseResult, ev: ChatSendBeforeEvent) => void;
+type customCallback = (args: parseResult, ev: ChatSendBeforeEvent, plr: Client) => void;
 
 export const cmdInfos: commandSub[] = [];
 
@@ -26,7 +27,7 @@ export function makeCommand(data: commandSub, callback: customCallback): string 
     aliases: data.aliases,
     help: data.help,
   }, (argv, ev) => {
-    callback(parseCommand(data, ev.message, argv), ev);
+    callback(parseCommand(data, ev.message, argv), ev, getClientById(ev.sender.id));
   });
   cmdInfos.push(data);
   return data.name;

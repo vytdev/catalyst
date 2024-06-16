@@ -37,7 +37,7 @@ const info: commandSub = {
   ]
 };
 
-makeCommand(info, (args, ev) => {
+makeCommand(info, (args, ev, plr) => {
   if (args.cmd) {
     // find the requested command
     const cmd = getCmdInfo(args.name);
@@ -58,7 +58,7 @@ makeCommand(info, (args, ev) => {
     for (const line of formatHelp(cmd).sort())
       msg += config.commandPrefix + line + '\n';
 
-    ev.sender.sendMessage(msg);
+    plr.msg(msg);
     return;
   }
 
@@ -71,18 +71,18 @@ makeCommand(info, (args, ev) => {
   // some paging info
   const maxPage = Math.ceil(list.length / MAX_PAGE_SIZE);
   const page    = Math.min(args.page, maxPage) - 1;
-  const start   = page == -1 ? 0 : page * MAX_PAGE_SIZE;
-  const end     = page == -1 ? list.length : Math.min(start + MAX_PAGE_SIZE, list.length);
+  const start   = page < 0 ? 0 : page * MAX_PAGE_SIZE;
+  const end     = page < 0 ? list.length : Math.min(start + MAX_PAGE_SIZE, list.length);
 
   // construct msg
   let msg;
-  if (page == -1) msg = '§aShowing help to all commands§r\n';
+  if (page < 0) msg = '§aShowing help to all commands§r\n';
   else msg = `§aShowing help page ${page + 1} of ${maxPage}§r\n`;
 
   // construct cmd infos
   for (let i = start; i < end; i++)
     msg += config.commandPrefix + list[i] + '\n';
 
-  ev.sender.sendMessage(msg);
+  plr.msg(msg);
 });
 
