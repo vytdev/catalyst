@@ -21,7 +21,7 @@ events.on("beforeChatSend", ev => {
   ev.cancel = true;
 
   if (!isChatEnabled && !ev.sender.hasTag(config.adminPerm)) {
-    broadcast('§7[§bchats§7] §echat is currently disabled!', ev.sender);
+    broadcast('§echat is currently disabled!§r', ev.sender);
     return;
   }
 

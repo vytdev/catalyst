@@ -46,5 +46,6 @@ export function getCmdInfo(name: string): commandSub {
 import("./chat.js");
 import("./data.js");
 import("./help.js");
+import("./kit.js");
 import("./warp.js");
 

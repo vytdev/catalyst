@@ -1,5 +1,6 @@
 import { makeCommand } from "./index.js";
 import { commandSub } from "../../catalyst/@types/commands";
+import { setTickTimeout } from "../../catalyst/index.js";
 import { serverLocs } from "../index.js";
 import { assertNotInCombat } from "../utils.js";
 
@@ -26,7 +27,9 @@ makeCommand(info, (args, ev, plr) => {
       'options: ' + [...serverLocs.keys()].join(', ');
 
   // tp the player
-  plr.player.teleport(serverLocs.get(args.loc));
-  plr.msg(`§aYou have been teleported to: §6${args.loc}§r\n`);
+  setTickTimeout(() => {
+    plr.player.teleport(serverLocs.get(args.loc));
+    plr.msg(`§aYou have been teleported to: §6${args.loc}§r\n`);
+  });
 });
 

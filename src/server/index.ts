@@ -22,6 +22,13 @@ export const serverLocs: Map<string, vec3> = new Map([
   ['spawn', { x: 0, y: 7, z: 0 }],
 ]);
 
+/**
+ * kit list
+ */
+export const kits: { name: string }[] = [
+  { name: 'operator' },
+];
+
 import "./client.js";
 import "./chats.js";
 import "./commands/index.js";

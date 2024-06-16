@@ -1,5 +1,6 @@
 import { makeCommand } from "./index.js";
 import { commandSub } from "../../catalyst/@types/commands";
+import { broadcast } from "../../catalyst/index.js";
 import { toggleChat } from "../chats.js";
 import { assertIsAdmin } from "../utils.js";
 
@@ -22,6 +23,6 @@ makeCommand(info, (args, ev, plr) => {
 
   // toggle
   toggleChat(args.val);
-  plr.msg('§eChats has been ' + (args.val ? '§aenabled' : '§cdisabled') + '§e!');
+  broadcast(`§echats has been ${args.val ? '§aenabled' : '§cdisabled'} by §6${plr.name}§r`);
 });
 

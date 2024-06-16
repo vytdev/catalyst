@@ -50,18 +50,19 @@ export let currentTps = 20;
 
 // loop for monitoring the server tick
 system.runInterval(() => {
-	// update the tickDeltaTime and currentTps variable
-	const currTick = Date.now();
-	tickDeltaTime = currTick - lastTick;
-	lastTick = currTick;
-	currentTps = 1000 / tickDeltaTime;
+  // update the tickDeltaTime and currentTps variable
+  const currTick = Date.now();
+  tickDeltaTime = currTick - lastTick;
+  lastTick = currTick;
+  currentTps = 1000 / tickDeltaTime;
 
-	if (tickDeltaTime >= config.serverLagWarning)
-		console.warn(`Running ${tickDeltaTime}ms behind, skipping ${tickDeltaTime / 50} tick(s).`);
+  if (tickDeltaTime >= config.serverLagWarning)
+    console.warn(`Running ${tickDeltaTime}ms behind, skipping ${tickDeltaTime / 50} tick(s).`);
 });
 
 // prevent watchdog from closing the server
 system.beforeEvents.watchdogTerminate.subscribe(ev => {
-	ev.cancel = true;
-	console.error("Watchdog: " + ev.terminateReason);
+  ev.cancel = true;
+  console.error("Watchdog: " + ev.terminateReason);
 });
+
