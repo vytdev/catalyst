@@ -76,9 +76,9 @@ makeCommand({
     throw `player with name '${args.subject}' not found!`;
 
   // the database
-  const db = subject instanceof Client
-    ? subject.db
-    : new Database(args.id, subject);
+  const db = new Database(args.id, subject instanceof Client
+    ? subject.player
+    : subject);
   if (!args.create)
     db.load();
   else
