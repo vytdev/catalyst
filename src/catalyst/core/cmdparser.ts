@@ -446,4 +446,9 @@ registerCommandTypeParser('int', (argv, argDef) => {
     throw 'not a valid integer: ' + argv[0]?.text;
   return { value: +argv[0]?.text };
 });
+registerCommandTypeParser('boolean', (argv, argDef) => {
+  if (!/^(true|false)$/.test(argv[0]?.text))
+    throw 'not a valid boolean';
+  return { value: argv[0]?.text == 'true' };
+})
 

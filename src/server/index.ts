@@ -23,4 +23,5 @@ export const serverLocs: Map<string, vec3> = new Map([
 ]);
 
 import "./client.js";
+import "./chats.js";
 import "./commands/index.js";

@@ -43,6 +43,7 @@ export function getCmdInfo(name: string): commandSub {
 }
 
 // import commands
+import("./chat.js");
 import("./data.js");
 import("./help.js");
 import("./warp.js");
