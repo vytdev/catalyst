@@ -27,6 +27,7 @@ export function makeCommand(data: commandSub, callback: customCallback): string 
     aliases: data.aliases,
     help: data.help,
   }, (argv, ev) => {
+    if (!ev) throw new ReferenceError("cannot run command");
     callback(parseCommand(data, ev.message, argv), ev, getClientById(ev.sender.id));
   });
   cmdInfos.push(data);

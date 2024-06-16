@@ -7,7 +7,7 @@ import { assertIsAdmin } from "../utils.js";
 const info: commandSub = {
   name: "chat",
   dest: "",
-  help: "Toggle chats.",
+  help: "toggle chats",
   args: [
     {
       name: "val",

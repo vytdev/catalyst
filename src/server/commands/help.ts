@@ -7,7 +7,7 @@ const MAX_PAGE_SIZE = 10;
 const info: commandSub = {
   name: "help",
   dest: "",
-  help: "Show help about commands",
+  help: "show help about commands",
   subs: [
     {
       name: "",
@@ -42,16 +42,16 @@ makeCommand(info, (args, ev, plr) => {
     // find the requested command
     const cmd = getCmdInfo(args.name);
     if (!cmd)
-      throw `Command not found: ${args.name}`;
+      throw `command not found: ${args.name}`;
 
     // construct the message
-    let msg = `§eCommand ${cmd.name}§r\n`;
+    let msg = `§ecommand ${cmd.name}§r\n`;
     if (cmd.aliases)
-      msg += `§eAliases: ${cmd.aliases.join(', ')}§r\n`;
+      msg += `§ealiases: ${cmd.aliases.join(', ')}§r\n`;
     if (cmd.help)
       msg += cmd.help;
     else
-      msg += 'No description.';
+      msg += 'no description.';
     msg += '\n';
 
     // process command info
@@ -76,8 +76,8 @@ makeCommand(info, (args, ev, plr) => {
 
   // construct msg
   let msg;
-  if (page < 0) msg = '§aShowing help to all commands§r\n';
-  else msg = `§aShowing help page ${page + 1} of ${maxPage}§r\n`;
+  if (page < 0) msg = '§ashowing help to all commands§r\n';
+  else msg = `§ashowing help page ${page + 1} of ${maxPage}§r\n`;
 
   // construct cmd infos
   for (let i = start; i < end; i++)

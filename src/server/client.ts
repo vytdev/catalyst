@@ -8,8 +8,7 @@ import {
   getPlayerByName,
   config
 } from "../catalyst/index.js";
-import { smpName, combatTime } from "./index.js";
-import { ranks } from "./ranks.js";
+import { smpName, combatTime, ranks } from "./index.js";
 import { isPlayerAdmin, setPlayerAdmin } from "./utils.js";
 
 /**

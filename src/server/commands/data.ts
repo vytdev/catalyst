@@ -6,16 +6,21 @@ import { colorize, assertIsAdmin } from "../utils.js";
 import config from "../../catalyst/config.js"
 
 makeCommand({
-  name: "db",
+  name: "data",
   dest: "",
-  help: "Manage databases",
+  aliases: [ "db" ],
+  help: "manage databases",
+
+  args: [
+    { dest: "subject", type: "string", required: true },
+    { dest: "id",      type: "string", required: true },
+  ],
+
   subs: [
     {
       name: "set",
       dest: "set",
       args: [
-        { dest: "subject", type: "string", required: true },
-        { dest: "id",      type: "string", required: true },
         { dest: "key",     type: "string", required: true },
         { dest: "value",   type: "string", required: true },
       ],
@@ -24,8 +29,6 @@ makeCommand({
       name: "get",
       dest: "get",
       args: [
-        { dest: "subject", type: "string", required: true },
-        { dest: "id",      type: "string", required: true },
         { dest: "key",     type: "string", required: true },
       ],
     },
@@ -33,119 +36,95 @@ makeCommand({
       name: "del",
       dest: "del",
       args: [
-        { dest: "subject", type: "string", required: true },
-        { dest: "id",      type: "string", required: true },
         { dest: "key",     type: "string", required: true },
       ],
     },
     {
       name: "clear",
       dest: "clear",
-      args: [
-        { dest: "subject", type: "string", required: true },
-        { dest: "id",      type: "string", required: true },
-      ],
     },
     {
       name: "show",
       dest: "show",
-      args: [
-        { dest: "subject", type: "string", required: true },
-        { dest: "id",      type: "string", required: true },
-      ],
     },
     {
       name: "create",
       dest: "create",
-      args: [
-        { dest: "subject", type: "string", required: true },
-        { dest: "id",      type: "string", required: true },
-      ],
     },
     {
       name: "destroy",
       dest: "destroy",
-      args: [
-        { dest: "subject", type: "string", required: true },
-        { dest: "id",      type: "string", required: true },
-      ],
     },
   ]
 }, (args, ev, plr) => {
-  if (!ev) throw "api!";
-
   assertIsAdmin(plr);
 
   // help
   if ([
-    "set", "get","del", "clear", "show", "create", "destroy"
+    "set", "get", "del", "clear", "show", "create", "destroy"
   ].every(v => !args[v])) {
-    plr.msg(`§ePlease enter action command!`);
-    plr.msg(`§eType ${config.commandPrefix}help for more info.`);
+    plr.msg(`§eplease enter action command!`);
+    plr.msg(`§etype §b${config.commandPrefix}help data§r§e for more info`);
     return;
   }
 
   // get database host
-  const subject = args['subject'] == 'world' ? world : getClientByName(args['subject']);
-  if (!subject) throw `Player with name '${args['subject']}' not found!`;
-  const id = args['id'];
+  const subject = args.subject == 'world'
+    ? world
+    : getClientByName(args.subject);
+  if (!subject)
+    throw `player with name '${args.subject}' not found!`;
+
   // the database
-  const db = subject instanceof Client ? subject.db : new Database(id, subject);
-  if (!args['create']) db.load();
-  else plr.msg('§aDatabase has been created! ' + db);
+  const db = subject instanceof Client
+    ? subject.db
+    : new Database(args.id, subject);
+  if (!args.create)
+    db.load();
+  else
+    plr.msg('§adatabase has been created! ' + db);
 
   // set
-  if (args['set']) {
-    const key = args['key'];
-    if (!key) throw "key not given";
-    const val = args['value'];
-    if (!val) throw "value not given";
-
+  if (args.set) {
     let json: any;
     try {
-      json = JSON.parse(val);
+      json = JSON.parse(args.value);
     } catch {
       throw "failed to parse value!";
     }
 
-    db.set(key, json);
-    plr.msg('§aKey has been set!');
+    db.set(args.key, json);
+    plr.msg('§akey has been set!');
   }
 
   // get
-  if (args['get']) {
-    const key = args['key'];
-    if (!key) throw "key not given";
-
-    plr.msg(colorize(db.get(key)));
+  if (args.get) {
+    plr.msg(colorize(db.get(args.key)));
     return;
   }
 
   // del
-  if (args['del']) {
-    const key = args['key'];
-    if (!key) throw "key not given";
-
-    if (db.del(key)) plr.msg('§aKey has been deleted!');
-    else plr.msg('§cFailed to delete key!');
+  if (args.del) {
+    if (db.del(args.key)) plr.msg('§akey has been deleted!');
+    else plr.msg('§cfailed to delete key!');
   }
 
   // clear
-  if (args['clear']) {
+  if (args.clear) {
     db.clear();
-    plr.msg('§aDatabase has been cleared!')
+    plr.msg('§adatabase has been cleared!')
   }
 
   // show
-  if (args['show']) {
+  if (args.show) {
     plr.msg(colorize(db['_cache']));
     return;
   }
 
   // destroy
-  if (args['destroy']) {
+  if (args.destroy) {
     db.destroy();
-    plr.msg('§aDatabase has been destroyed!');
+    plr.msg('§adatabase has been destroyed!');
     return;
   }
 

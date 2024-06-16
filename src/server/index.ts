@@ -33,10 +33,17 @@ export const serverLocs: Map<string, vec3> = new Map([
 ]);
 
 /**
+ * ranks
+ */
+export const ranks: { name: string, price: number, benifits: string[] }[] = [
+  { name: "none", price: 0, benifits: [ "default" ] }
+];
+
+/**
  * kit list
  */
-export const kits: { name: string }[] = [
-  { name: 'operator' },
+export const kits: { name: string, rank?: number, admin?: boolean }[] = [
+  { name: 'operator', admin: true },
 ];
 
 import "./client.js";

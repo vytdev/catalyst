@@ -7,7 +7,7 @@ import { assertNotInCombat } from "../utils.js";
 const info: commandSub = {
   name: "warp",
   dest: "",
-  help: "Warp into a server location.",
+  help: "warp into a server location",
   args: [
     {
       name: "loc",
@@ -29,7 +29,7 @@ makeCommand(info, (args, ev, plr) => {
   // tp the player
   setTickTimeout(() => {
     plr.player.teleport(serverLocs.get(args.loc));
-    plr.msg(`§aYou have been teleported to: §6${args.loc}§r\n`);
+    plr.msg(`§ayou have been teleported to: §6${args.loc}§r\n`);
   });
 });
 
