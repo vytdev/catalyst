@@ -13,7 +13,7 @@ const info: commandSub = {
     {
       name: "add",
       dest: "add",
-      aliases: [ "new" ],
+      aliases: [ "new", "set" ],
       args: [
         {
           name: "name",
@@ -132,8 +132,13 @@ makeCommand(info, (args, ev, plr) => {
   }
 
   // show the list
-  let msg = '§eyou have §6' + homes.length + '§e homes:\n';
-  msg += homes.map(h => '- §b' + h[0] + '§r').join('\n');
+  let msg = '§eyou have §6' + homes.length + '§e homes:§r\n';
+  msg += homes.map(h => '- §b' + h[0] + '§r (' +
+                   '§7' + Math.floor(h[2].x) + '§r, ' +
+                   '§7' + Math.floor(h[2].y) + '§r, ' +
+                   '§7' + Math.floor(h[2].z) + '§r ' +
+                   'at §7' + h[1].replace('minecraft:', '') +
+                   '§r)').join('\n');
   plr.msg(msg);
 });
 

@@ -8,6 +8,7 @@ const info: commandSub = {
   name: "warp",
   dest: "",
   help: "warp into a server location",
+  aliases: [ "w" ],
   args: [
     {
       name: "loc",
