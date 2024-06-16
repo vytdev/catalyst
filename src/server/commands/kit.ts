@@ -1,5 +1,6 @@
 import { makeCommand } from "./index.js";
 import { commandSub } from "../../catalyst/@types/commands";
+import { setTickTimeout } from "../../catalyst/index.js";
 import { kits } from "../index.js";
 import { assertNotInCombat } from "../utils.js";
 import { world } from "@minecraft/server";
@@ -28,9 +29,11 @@ makeCommand(info, (args, ev, plr) => {
       'options: ' + kits.map(v => v.name).join(', ');
 
   // give the kit
-  world.structureManager.place('kit:' + args.name,
-                               plr.player.dimension,
-                               plr.player.location);
-  plr.msg(`§aGiven kit: §6${args.name}§r\n`);
+  setTickTimeout(() => {
+    world.structureManager.place('kit:' + args.name,
+                                 plr.player.dimension,
+                                 plr.player.location);
+    plr.msg(`§aGiven kit: §6${args.name}§r\n`);
+  });
 });
 
