@@ -220,9 +220,25 @@ system.runInterval(() => {
     if (v.combatTag) {
       v.combatTimer--;
       if (v.combatTimer > 0)
-        msg += `§c  Combat tag: §e${msToString(v.combatTimer)}\n`;
+        msg += `§7  Combat tag: §c${msToString(v.combatTimer)}\n`;
       else
         v.player.onScreenDisplay.setTitle('§aYour combat tag is expired!§r');
+    }
+
+    // speedometer when you're using elytra
+    if (v.player.isGliding) {
+      const velocity = v.player.getVelocity();
+      const speed = Math.sqrt(velocity.x ** 2 + velocity.y ** 2 + velocity.z ** 2);
+      // kilometers per hour (rounded to the first decimal place)
+      // 720 might seem to be a magic number, but its just derived from:
+      // speed * 720 = speed * 72000 / 1000 * 10
+      // where:
+      // - 72000 = ticks per real-time hour (20 * 60 * 60)
+      // - 1000  = 1 in-game kilometer
+      // - 10    = just for precision before rounding
+      const speedKPH = Math.round(speed * 720) / 10;
+      // set speed
+      msg += `§7  Speed: §6${speedKPH} km/h\n`;
     }
 
     // additional sidebar texts
