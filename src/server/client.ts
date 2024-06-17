@@ -1,4 +1,4 @@
-import { GameMode, Player, system, world } from "@minecraft/server";
+import { GameMode, ItemStack, Player, system, world } from "@minecraft/server";
 import {
   Database,
   events,
@@ -108,6 +108,14 @@ export class Client {
    * message the player
    */
   public msg(txt: string) { this.player.sendMessage(txt); }
+
+  /**
+   * add an item into player's inventory
+   * @param item the ItemStack instance of item
+   */
+  public giveItem(item: ItemStack) {
+    this.player.getComponent('minecraft:inventory').container.addItem(item);
+  }
 }
 
 /**

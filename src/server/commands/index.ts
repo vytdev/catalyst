@@ -51,5 +51,6 @@ import("./help.js");
 import("./home.js");
 import("./kit.js");
 import("./perm.js");
+import("./shop.js");
 import("./warp.js");
 

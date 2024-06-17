@@ -49,4 +49,5 @@ export const kits: { name: string, rank?: number, admin?: boolean }[] = [
 import "./client.js";
 import "./chats.js";
 import "./commands/index.js";
+import "./shop.js";
 
