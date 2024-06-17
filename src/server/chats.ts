@@ -41,6 +41,21 @@ events.on("beforeChatSend", ev => {
     " §eY:§r" + Math.floor(ev.sender.location.y) +
     " §eZ:§r" + Math.floor(ev.sender.location.z));
 
+  // get the player's current held item
+  const heldItem = ev.sender
+    .getComponent("minecraft:inventory")
+    .container
+    .getItem(ev.sender.selectedSlotIndex);
+
+  // item text to use for the item placeholder
+  let displayName = '§8[§6' + (heldItem?.typeId || 'minecraft:air');
+  if (heldItem?.amount > 1)
+    displayName += ' §r§bx' + heldItem.amount;
+  displayName += '§8]§r';
+
+  // [item] placeholder
+  msg = msg.replace(/\[i(?:tem)?\]/g, displayName);
+
   // [\ command ] placeholder
   msg = msg.replace(new RegExp(`\\[\\${config.commandPrefix}([^\\]]+)\\]`, "g"),
     (_, cmd) => "§b[§e" + config.commandPrefix + cmd + "§b]§r");
