@@ -128,7 +128,7 @@ system.runInterval(() => {
 
   // tick interval
   for (const handle of [...intervals]) {
-    if (handle.time % tickCounter != 0)
+    if (tickCounter % handle.time != 0)
       continue;
 
     try {
