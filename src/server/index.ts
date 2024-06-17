@@ -11,6 +11,11 @@ export const logger = new Logger();
 export const smpName = "Infinity";
 
 /**
+ * time interval per permission validation (in ticks)
+ */
+export const validationInterval = 20 * 5; // 5 seconds
+
+/**
  * the name of the owner
  */
 export const ownerName = "vytdev";

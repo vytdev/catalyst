@@ -1,4 +1,4 @@
-import { GameMode, ItemStack, Player, system, world } from "@minecraft/server";
+import { GameMode, ItemStack, Player, world } from "@minecraft/server";
 import {
   Database,
   events,
@@ -6,9 +6,10 @@ import {
   msToString,
   formatNumber,
   getPlayerByName,
+  setTickInterval,
   config
 } from "../catalyst/index.js";
-import { smpName, combatTime, ranks } from "./index.js";
+import { smpName, validationInterval, combatTime, ranks } from "./index.js";
 import { isPlayerAdmin, setPlayerAdmin } from "./utils.js";
 
 /**
@@ -201,8 +202,10 @@ events.on("afterEntityHurt", ev => {
   getClientById(ev.damageSource.damagingEntity.id)?.setCombatTag();
 });
 
+let validationTimeCounter = 0;
+
 // loop checks and sidebar update
-system.runInterval(() => {
+setTickInterval(() => {
   // get the date
   const d = new Date();
   const date =
@@ -211,15 +214,20 @@ system.runInterval(() => {
     d.getFullYear().toString();
 
   clients.forEach(v => {
-    // non-admin players should not have op permissions
-    // and should always be in survival mode
-    if (!v.isAdmin) {
-      v.player.setOp(false);
-      v.player.setGameMode(GameMode.survival);
-    }
-    // admin players
-    else {
-      v.player.setOp(true);
+
+    // a validation time interval to improve server performance
+    if (++validationTimeCounter >= validationInterval) {
+      validationTimeCounter = 0;
+      // non-admin players should not have op permissions
+      // and should always be in survival mode
+      if (!v.isAdmin) {
+        v.player.setOp(false);
+        v.player.setGameMode(GameMode.survival);
+      }
+      // admin players
+      else {
+        v.player.setOp(true);
+      }
     }
 
     // update playtime
