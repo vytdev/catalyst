@@ -11,6 +11,7 @@ import {
   commandToken,
 } from "../@types/commands";
 import { CommandError } from "./command.js";
+import { vec2, vec3, degToRad } from "./math.js";
 
 const typeParsers: Record<string, commandTypeParser> = {};
 
@@ -443,6 +444,7 @@ export function formatHelp(cmd: commandSub): string[] {
 registerCommandTypeParser('string', (argv, argDef) => {
   return { value: argv[0]?.text };
 });
+
 registerCommandTypeParser('int', (argv, argDef) => {
   if (!/^[+-]?(?:0|[1-9][0-9]*)$/.test(argv[0]?.text)) {
     const err = new CommandError('not a valid integer: ' + argv[0]?.text);
@@ -451,6 +453,7 @@ registerCommandTypeParser('int', (argv, argDef) => {
   }
   return { value: +argv[0]?.text };
 });
+
 registerCommandTypeParser('boolean', (argv, argDef) => {
   if (!/^(true|false)$/.test(argv[0]?.text)) {
     const err = new CommandError('not a valid boolean');
@@ -458,5 +461,117 @@ registerCommandTypeParser('boolean', (argv, argDef) => {
     throw err;
   }
   return { value: argv[0]?.text == 'true' };
-})
+});
+
+registerCommandTypeParser('xyz', (argv, argDef) => {
+  let arg = argv[0];
+  let str = arg.text;
+  let idx = 0;
+  let offst = 0;
+
+  let x = 0, xRel = false, xRot = false;
+  let y = 0, yRel = false, yRot = false;
+  let z = 0, zRel = false, zRot = false;
+
+  // get next arg
+  const nextArg = () => {
+    // check if there's still args
+    if (argv.length <= ++idx) {
+      const err = new CommandError('unexpected end of input');
+      err.token = {
+        text: "",
+        start: Infinity,
+        end: Infinity,
+        quoted: false,
+      };
+      throw err;
+    }
+
+    // get next arg
+    arg = argv[idx];
+    str = arg.text;
+    offst = 0;
+  };
+
+  // increment the string
+  const inc = (n: number = 1) => {
+    str = str.slice(n);
+    offst += n;
+  };
+
+  // get next number
+  const getNum = (): number => {
+    const regex = /^([+-]?(?:0|[1-9][0-9]*)(?:\.[0-9]+)?)(?:[~^+-]|$)/g;
+
+    // check if match
+    if (!regex.test(str)) {
+      if (offst > 0) return 0;
+      const err = new CommandError('invalid number', offst);
+      err.token = arg;
+      throw err;
+    }
+
+    regex.lastIndex = 0;
+    const raw = regex.exec(str)[1];
+    inc(raw.length);
+    return +raw;
+  };
+
+  // ^^^offset
+  if (str.startsWith('^^^')) {
+    xRot = yRot = zRot = true;
+    inc(3);
+    x = y = z = getNum();
+  }
+
+  // 0 ~1 ^2
+  else {
+    // x-coord
+    if      (str[0] == '~') { xRel = true; inc(); }
+    else if (str[0] == '^') { xRot = true; inc(); }
+    x = getNum();
+
+    // y-coord
+    if (str.length == 0) nextArg();
+    if      (str[0] == '~') { yRel = true; inc(); }
+    else if (str[0] == '^') { yRot = true; inc(); }
+    y = getNum();
+
+    // z-coord
+    if (str.length == 0) nextArg();
+    if      (str[0] == '~') { zRel = true; inc(); }
+    else if (str[0] == '^') { zRot = true; inc(); }
+    z = getNum();
+
+    // auto-adjust block location
+    if (!xRot && x % 1 == 0) x += 0.5;
+    if (!zRot && z % 1 == 0) z += 0.5;
+  }
+
+  function handleFn(org: vec3, rot: vec2): vec3 {
+    let finalX = org.x;
+    let finalY = org.y;
+    let finalZ = org.z;
+
+    // radians of thr rot
+    const pitch = degToRad(rot.x);
+    const yaw = degToRad(rot.y);
+
+    // compute modifiers
+    if (xRel) finalX += x;
+    if (xRot) finalX += x * Math.cos(pitch) * -Math.sin(yaw);
+    if (yRel) finalY += y;
+    if (yRot) finalY += y * -Math.sin(pitch);
+    if (zRel) finalZ += z;
+    if (zRot) finalZ += z * Math.cos(pitch) * Math.cos(yaw);
+
+    return {
+      x: finalX,
+      y: finalY,
+      z: finalZ,
+    };
+  }
+
+  return { value: handleFn, step: idx + 1 };
+});
 

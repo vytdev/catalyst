@@ -120,6 +120,14 @@ export class Database<T extends Record<string, any>> {
   }
 
   /**
+   * get a list of keys in the db
+   * @returns list of strings
+   */
+  public keys<K extends keyof T>(): K[] {
+    return Object.keys(this._cache) as K[];
+  }
+
+  /**
    * clears the cache, use Database.save() to take changes
    */
   public clear(): void {

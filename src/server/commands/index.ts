@@ -50,7 +50,9 @@ import("./data.js");
 import("./help.js");
 import("./home.js");
 import("./kit.js");
+import("./mloc.js");
 import("./perm.js");
 import("./shop.js");
+import("./spawn.js");
 import("./warp.js");
 

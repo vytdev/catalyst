@@ -6,32 +6,32 @@
  * vec2 object interface
  */
 export interface vec2 {
-	/**
-	 * x field of the vector
-	 */
-	x: number,
-	/**
-	 * y field of the vector
-	 */
-	y: number,
+  /**
+   * x field of the vector
+   */
+  x: number,
+  /**
+   * y field of the vector
+   */
+  y: number,
 }
 
 /**
  * vec3 object interface
  */
 export interface vec3 {
-	/**
-	 * x field of the vector
-	 */
-	x: number,
-	/**
-	 * y field of the vector
-	 */
-	y: number,
-	/**
-	 * z field of the vector
-	 */
-	z: number,
+  /**
+   * x field of the vector
+   */
+  x: number,
+  /**
+   * y field of the vector
+   */
+  y: number,
+  /**
+   * z field of the vector
+   */
+  z: number,
 }
 
 /**
@@ -65,7 +65,7 @@ export const UP: vec3 = { x: 0, y: 1, z: 0 };
  * @returns radians
  */
 export function degToRad(x: number): number {
-	return x * Math.PI / 180;
+  return x * Math.PI / 180;
 }
 
 /**
@@ -74,7 +74,7 @@ export function degToRad(x: number): number {
  * @returns degrees
  */
 export function radToDeg(x: number): number {
-	return x * 180 / Math.PI;
+  return x * 180 / Math.PI;
 }
 /**
  * calculates the coordinates of a point along a ray, given a rotational angle
@@ -85,14 +85,14 @@ export function radToDeg(x: number): number {
  * @returns the resulting coordinates as a vec3.
  */
 export function computeRayCoords(offset: vec3, angle: vec2, dist: number): vec3 {
-	const pitch = degToRad(angle.x);
-	const yaw = degToRad(angle.y);
+  const pitch = degToRad(angle.x);
+  const yaw = degToRad(angle.y);
 
-	return {
-		x: offset.x + dist * -Math.cos(pitch) * Math.sin(yaw),
-		y: offset.y + dist * -Math.sin(pitch),
-		z: offset.z + dist * Math.cos(pitch) * Math.cos(yaw),
-	};
+  return {
+    x: offset.x + dist * Math.cos(pitch) * -Math.sin(yaw),
+    y: offset.y + dist * -Math.sin(pitch),
+    z: offset.z + dist * Math.cos(pitch) * Math.cos(yaw),
+  };
 }
 
 /**
@@ -102,11 +102,11 @@ export function computeRayCoords(offset: vec3, angle: vec2, dist: number): vec3 
  * @returns the distance of point a from point b
  */
 export function vdist(a: vec3, b: vec3): number {
-	return Math.sqrt(
-		(a.x - b.x) ** 2 +
-		(a.y - b.y) ** 2 +
-		(a.z - b.z) ** 2
-	);
+  return Math.sqrt(
+    (a.x - b.x) ** 2 +
+    (a.y - b.y) ** 2 +
+    (a.z - b.z) ** 2
+  );
 }
 
 /**
@@ -115,11 +115,11 @@ export function vdist(a: vec3, b: vec3): number {
  * @returns new vec3 that is fully independent from the source
  */
 export function vclone(v: vec3): vec3 {
-	return {
-		x: v.x,
-		y: v.y,
-		z: v.z,
-	};
+  return {
+    x: v.x,
+    y: v.y,
+    z: v.z,
+  };
 }
 
 /**
@@ -129,11 +129,11 @@ export function vclone(v: vec3): vec3 {
  * @returns sum
  */
 export function vadd(a: vec3, b: vec3): vec3 {
-	return {
-		x: a.x + b.x,
-		y: a.y + b.y,
-		z: a.z + b.z,
-	};
+  return {
+    x: a.x + b.x,
+    y: a.y + b.y,
+    z: a.z + b.z,
+  };
 }
 
 /**
@@ -143,11 +143,11 @@ export function vadd(a: vec3, b: vec3): vec3 {
  * @returns difference
  */
 export function vsub(a: vec3, b: vec3): vec3 {
-	return {
-		x: a.x - b.x,
-		y: a.y - b.y,
-		z: a.z - b.z,
-	};
+  return {
+    x: a.x - b.x,
+    y: a.y - b.y,
+    z: a.z - b.z,
+  };
 }
 
 /**
@@ -157,11 +157,11 @@ export function vsub(a: vec3, b: vec3): vec3 {
  * @returns product
  */
 export function vmul(a: vec3, b: vec3): vec3 {
-	return {
-		x: a.x * b.x,
-		y: a.y * b.y,
-		z: a.z * b.z,
-	};
+  return {
+    x: a.x * b.x,
+    y: a.y * b.y,
+    z: a.z * b.z,
+  };
 }
 
 /**
@@ -171,11 +171,11 @@ export function vmul(a: vec3, b: vec3): vec3 {
  * @returns quotient
  */
 export function vdiv(a: vec3, b: vec3): vec3 {
-	return {
-		x: a.x / b.x,
-		y: a.y / b.y,
-		z: a.z / b.z,
-	};
+  return {
+    x: a.x / b.x,
+    y: a.y / b.y,
+    z: a.z / b.z,
+  };
 }
 
 /**
@@ -185,11 +185,11 @@ export function vdiv(a: vec3, b: vec3): vec3 {
  * @returns min coords
  */
 export function vmin(a: vec3, b: vec3): vec3 {
-	return {
-		x: Math.min(a.x, b.x),
-		y: Math.min(a.y, b.y),
-		z: Math.min(a.z, b.z),
-	};
+  return {
+    x: Math.min(a.x, b.x),
+    y: Math.min(a.y, b.y),
+    z: Math.min(a.z, b.z),
+  };
 }
 
 /**
@@ -199,11 +199,11 @@ export function vmin(a: vec3, b: vec3): vec3 {
  * @returns max coords
  */
 export function vmax(a: vec3, b: vec3): vec3 {
-	return {
-		x: Math.max(a.x, b.x),
-		y: Math.max(a.y, b.y),
-		z: Math.max(a.z, b.z),
-	};
+  return {
+    x: Math.max(a.x, b.x),
+    y: Math.max(a.y, b.y),
+    z: Math.max(a.z, b.z),
+  };
 }
 
 /**
@@ -212,11 +212,11 @@ export function vmax(a: vec3, b: vec3): vec3 {
  * @returns flooring of v
  */
 export function vfloor(v: vec3): vec3 {
-	return {
-		x: Math.floor(v.x),
-		y: Math.floor(v.y),
-		z: Math.floor(v.z),
-	};
+  return {
+    x: Math.floor(v.x),
+    y: Math.floor(v.y),
+    z: Math.floor(v.z),
+  };
 }
 
 /**
@@ -225,11 +225,11 @@ export function vfloor(v: vec3): vec3 {
  * @returns ceiling of v
  */
 export function vceil(v: vec3): vec3 {
-	return {
-		x: Math.ceil(v.x),
-		y: Math.ceil(v.y),
-		z: Math.ceil(v.z),
-	};
+  return {
+    x: Math.ceil(v.x),
+    y: Math.ceil(v.y),
+    z: Math.ceil(v.z),
+  };
 }
 
 /**
@@ -238,11 +238,11 @@ export function vceil(v: vec3): vec3 {
  * @returns rounded v
  */
 export function vround(v: vec3): vec3 {
-	return {
-		x: Math.round(v.x),
-		y: Math.round(v.y),
-		z: Math.round(v.z),
-	};
+  return {
+    x: Math.round(v.x),
+    y: Math.round(v.y),
+    z: Math.round(v.z),
+  };
 }
 
 /**
@@ -251,9 +251,10 @@ export function vround(v: vec3): vec3 {
  * @returns abs of v
  */
 export function vabs(v: vec3): vec3 {
-	return {
-		x: Math.abs(v.x),
-		y: Math.abs(v.y),
-		z: Math.abs(v.z),
-	};
+  return {
+    x: Math.abs(v.x),
+    y: Math.abs(v.y),
+    z: Math.abs(v.z),
+  };
 }
+

@@ -1,9 +1,17 @@
 /**
  * SMP server code (sample)
  */
-import { Logger, vec3 } from "../catalyst/index.js";
+import { Database, Logger, vec3 } from "../catalyst/index.js";
 
+/**
+ * a logger
+ */
 export const logger = new Logger();
+
+/**
+ * server config db
+ */
+export const options = new Database('options');
 
 /**
  * the name of smp
@@ -29,13 +37,6 @@ export const controlPassword = "hello_world";
  * combat tag time (in ticks)
  */
 export const combatTime = 20 * 15; // 15 seconds
-
-/**
- * server locations (used in \warp)
- */
-export const serverLocs: Map<string, vec3> = new Map([
-  ['spawn', { x: 0, y: 7, z: 0 }],
-]);
 
 /**
  * ranks

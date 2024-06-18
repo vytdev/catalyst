@@ -7,6 +7,8 @@ import {
   formatNumber,
   getPlayerByName,
   setTickInterval,
+  vec2,
+  vec3,
   config
 } from "../catalyst/index.js";
 import { smpName, validationInterval, combatTime, ranks } from "./index.js";
@@ -68,6 +70,16 @@ export class Client {
    * the player's name
    */
   public get name(): string { return this.player.name; }
+  /**
+   * the player's location
+   */
+  public get loc(): vec3 { return this.player.location; }
+  public set loc(v: vec3) { this.player.teleport(v); }
+  /**
+   * the player's head rotation
+   */
+  public get rot(): vec2 { return this.player.getRotation(); }
+  public set rot(r: vec2) { this.player.setRotation(r); }
 
   // player's db values
   /** rank */

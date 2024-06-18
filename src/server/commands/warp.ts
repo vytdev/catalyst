@@ -1,7 +1,7 @@
 import { makeCommand } from "./index.js";
 import { commandSub } from "../../catalyst/@types/commands";
 import { setTickTimeout } from "../../catalyst/index.js";
-import { serverLocs } from "../index.js";
+import { options } from "../index.js";
 import { assertNotInCombat } from "../utils.js";
 
 const info: commandSub = {
@@ -21,15 +21,17 @@ const info: commandSub = {
 
 makeCommand(info, (args, ev, plr) => {
   assertNotInCombat(plr);
+  options.load();
+  const locs = options.get('locs', {});
 
   // validate option
-  if (!serverLocs.has(args.loc))
+  if (!locs[args.loc])
     throw `unknown location '${args.loc}'\n` +
-      'options: ' + [...serverLocs.keys()].join(', ');
+      'options: ' + [...Object.keys(locs)].join(', ');
 
   // tp the player
   setTickTimeout(() => {
-    plr.player.teleport(serverLocs.get(args.loc));
+    plr.player.teleport(locs[args.loc]);
     plr.msg(`§ayou have been teleported to: §6${args.loc}§r\n`);
   });
 });
