@@ -5,6 +5,7 @@ import {
   formatNumber,
   message,
   broadcast,
+  urlRegex
 } from "../catalyst/index.js";
 import { getClientById } from "./client.js";
 import { isPlayerAdmin } from "./utils.js";
@@ -67,6 +68,14 @@ events.on("beforeChatSend", ev => {
   // [\ command ] placeholder
   msg = msg.replace(new RegExp(`\\[\\${config.commandPrefix}([^\\]]+)\\]`, "g"),
     (_, cmd) => "§b[§e" + config.commandPrefix + cmd + "§b]§r");
+
+  // highlight urls
+  msg = msg.replace(urlRegex, "§3$&§r");
+
+  // warns the player if the message contains url or possibly e-mail addresses
+  if (urlRegex.test(msg))
+    plr.msg('§ewarning: we detected an e-mail address or a url in your message\n' +
+            'please ensure the message does not contain any of your private information!');
 
   // the message is empty
   if (!msg.length) return;

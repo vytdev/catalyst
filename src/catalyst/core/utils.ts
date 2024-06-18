@@ -109,3 +109,59 @@ export function toRomanNumeral(num: number): string {
 
   return '';
 }
+
+/**
+ * escape regular expression in strings
+ * @param string the string
+ * @returns {string}
+ */
+export function escapeRegExp(str: string): string {
+  // thx: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions#escaping
+  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
+}
+
+/**
+ * a regex for validating urls. useful for whether filtering urls on chats, or just
+ * highlighting them automatically. e-mails can match by this regex too! it is good for
+ * general purpose, but it is not fully compliant to rfc 3986 (i just need this regex
+ * for the game)
+ *
+ * explanation:
+ *
+ * scheme
+ * (?:[\w\d-]+:\/\/)?
+ *
+ * username
+ * (?:[\w\d+_\.~-]+@)?
+ *
+ * host (dns and ipv4 part)
+ * (?:(?:[\w\d_-]+\.)+[\w\d_-]+|
+ *
+ * host (ipv6 part)
+ * \[[0-9a-fA-F:]+\])
+ *
+ * port
+ * (?::\d+)?
+ *
+ * start of path
+ * (?:\/
+ *
+ * dirs
+ * (?:[^\s\/$.?#]+\/)*
+ *
+ * file
+ * [^\s\/$.?#]*
+ *
+ * query (?a=b&c=d)
+ * (?:\?(?:[^\s\/$.?#=]+\=[^\s\/$.?#=]+)+(?:&[^\s\/$.?#=]+=[^\s\/$.?#=]+)*)?
+ *
+ * fragment
+ * (?:#[^\s\/$.?#]*)?
+ *
+ * end of path
+ * )?
+ *
+ * @author me (vytdev)
+ */
+export const urlRegex = /(?:[\w\d-]+:\/\/)?(?:[\w\d+_\.~-]+@)?(?:(?:[\w\d_-]+\.)+[\w\d_-]+|\[[0-9a-fA-F:]+\])(?::\d+)?(?:\/(?:[^\s\/$.?#]+\/)*[^\s\/$.?#]*(?:\?(?:[^\s\/$.?#=]+\=[^\s\/$.?#=]+)+(?:&[^\s\/$.?#=]+=[^\s\/$.?#=]+)*)?(?:#[^\s\/$.?#]*)?)?/gi;
+
