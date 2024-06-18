@@ -451,7 +451,28 @@ registerCommandTypeParser('int', (argv, argDef) => {
     err.token = argv[0];
     throw err;
   }
-  return { value: +argv[0]?.text };
+
+  // range
+  const val = +argv[0]?.text;
+  if (argDef.range) {
+    const range: [number | null, number | null] = argDef.range;
+
+    // min range
+    if (typeof range[0] == 'number' && val < range[0]) {
+      const err = new CommandError(`${val} is too low, it must be atleast ${range[0]}`);
+      err.token = argv[0];
+      throw err;
+    }
+
+    // max range
+    if (typeof range[1] == 'number' && val > range[1]) {
+      const err = new CommandError(`${val} is too high, it must be atmost ${range[1]}`);
+      err.token = argv[0];
+      throw err;
+    }
+  }
+
+  return { value: val };
 });
 
 registerCommandTypeParser('boolean', (argv, argDef) => {
@@ -549,21 +570,21 @@ registerCommandTypeParser('xyz', (argv, argDef) => {
   }
 
   function handleFn(org: vec3, rot: vec2): vec3 {
-    let finalX = org.x;
-    let finalY = org.y;
-    let finalZ = org.z;
+    let finalX = x;
+    let finalY = y;
+    let finalZ = z;
 
     // radians of thr rot
     const pitch = degToRad(rot.x);
     const yaw = degToRad(rot.y);
 
     // compute modifiers
-    if (xRel) finalX += x;
-    if (xRot) finalX += x * Math.cos(pitch) * -Math.sin(yaw);
-    if (yRel) finalY += y;
-    if (yRot) finalY += y * -Math.sin(pitch);
-    if (zRel) finalZ += z;
-    if (zRot) finalZ += z * Math.cos(pitch) * Math.cos(yaw);
+    if (xRel) finalX = org.x + x;
+    if (xRot) finalX = org.x + x * Math.cos(pitch) * -Math.sin(yaw);
+    if (yRel) finalY = org.y + y;
+    if (yRot) finalY = org.y + y * -Math.sin(pitch);
+    if (zRel) finalZ = org.z + z;
+    if (zRot) finalZ = org.z + z * Math.cos(pitch) * Math.cos(yaw);
 
     return {
       x: finalX,

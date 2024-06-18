@@ -17,6 +17,7 @@ const info: commandSub = {
           type: "int",
           name: "page",
           dest: "page",
+          range: [ 0, null ],
           required: false,
           default: 1,
         }

@@ -11,6 +11,7 @@ const info: commandSub = {
       name: "lineCount",
       dest: "lines",
       type: "int",
+      range: [ 1, null ],
       default: 100,
     }
   ]
