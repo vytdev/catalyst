@@ -13,7 +13,7 @@ export default [
   'bu+gger', // bugger
   'da+mn+', // damn
   'di+c+k', // dick
-  'f(?:u|e)+c+k', // f[ue]ck
+  'f(?:u|e)+c+ky*[ou]*', // f[ue]ck(you)
   'gi+t', // git
   'mi+nge+r', // minger
   'mu+nte+r', // munter

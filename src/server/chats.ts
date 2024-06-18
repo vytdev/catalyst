@@ -68,6 +68,9 @@ events.on("beforeChatSend", ev => {
   msg = msg.replace(new RegExp(`\\[\\${config.commandPrefix}([^\\]]+)\\]`, "g"),
     (_, cmd) => "§b[§e" + config.commandPrefix + cmd + "§b]§r");
 
+  // the message is empty
+  if (!msg.length) return;
+
   // broadcast the message through [/tellraw]
   message(msg);
 });
@@ -110,6 +113,9 @@ export function toRegex(prof: string): RegExp {
     case "z": return "[*zZ2sS$5]";
     default: return m;
   }});
+
+  // only match whole words
+  regex = `\\b${regex}\\b`;
 
   // return regexp: ignorecase and global flag
   return new RegExp(regex, "ig");
