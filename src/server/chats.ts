@@ -2,9 +2,11 @@ import {
   events,
   config,
   removeFormatCodes,
+  formatNumber,
   message,
   broadcast,
 } from "../catalyst/index.js";
+import { getClientById } from "./client.js";
 import { isPlayerAdmin } from "./utils.js";
 import profanity from "./profanity.js";
 
@@ -21,15 +23,18 @@ events.on("beforeChatSend", ev => {
   // cancel broadcast
   ev.cancel = true;
 
+  // the client class of the sender
+  const plr = getClientById(ev.sender.id);
+
   if (!isChatEnabled && !isPlayerAdmin(ev.sender)) {
-    broadcast('§echat is currently disabled!§r', ev.sender);
+    plr.msg('§echat is currently disabled!§r');
     return;
   }
 
   let msg: string = '§¶';
-  if (isPlayerAdmin(ev.sender))
+  if (plr.msg)
     msg += '§7[§cadmin§7]§r ';
-  msg += '§7' + ev.sender.name + "§r: ";
+  msg += '§7' + plr.name + "§r: ";
 
   // the actual message, masked profanity, removed format codes
   msg += removeFormatCodes(clean(ev.message));
@@ -37,9 +42,9 @@ events.on("beforeChatSend", ev => {
   // [pos] placeholder
   msg = msg.replace(/\[pos\]/g, "§bWorld:§r" +
     " " + ev.sender.dimension.id.replace("minecraft:", "") +
-    " §eX:§r" + Math.floor(ev.sender.location.x) +
-    " §eY:§r" + Math.floor(ev.sender.location.y) +
-    " §eZ:§r" + Math.floor(ev.sender.location.z));
+    " §eX:§r" + Math.floor(plr.loc.x) +
+    " §eY:§r" + Math.floor(plr.loc.y) +
+    " §eZ:§r" + Math.floor(plr.loc.z));
 
   // get the player's current held item
   const heldItem = ev.sender
@@ -48,13 +53,16 @@ events.on("beforeChatSend", ev => {
     .getItem(ev.sender.selectedSlotIndex);
 
   // item text to use for the item placeholder
-  let displayName = '§8[§6' + (heldItem?.typeId || 'minecraft:air');
+  let itemName = '§8[§6' + (heldItem?.typeId || 'minecraft:air');
   if (heldItem?.amount > 1)
-    displayName += ' §r§bx' + heldItem.amount;
-  displayName += '§8]§r';
+    itemName += ' §r§bx' + heldItem.amount;
+  itemName += '§8]§r';
 
   // [item] placeholder
-  msg = msg.replace(/\[i(?:tem)?\]/g, displayName);
+  msg = msg.replace(/\[i(?:tem)?\]/g, itemName);
+
+  // [money] placeholder
+  msg = msg.replace(/\[m(?:oney)?\]/g, '§a$' + formatNumber(plr.money) + '§r');
 
   // [\ command ] placeholder
   msg = msg.replace(new RegExp(`\\[\\${config.commandPrefix}([^\\]]+)\\]`, "g"),
