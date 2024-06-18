@@ -13,7 +13,6 @@ const info: commandSub = {
     {
       name: "add",
       dest: "add",
-      aliases: [ "new", "set" ],
       args: [
         {
           name: "name",
@@ -25,9 +24,8 @@ const info: commandSub = {
     },
 
     {
-      name: "delete",
+      name: "del",
       dest: "del",
-      aliases: [ "del", "remove", "rm" ],
       args: [
         {
           name: "name",
@@ -39,9 +37,8 @@ const info: commandSub = {
     },
 
     {
-      name: "teleport",
+      name: "tp",
       dest: "tp",
-      aliases: [ "tp" ],
       args: [
         {
           name: "name",
@@ -63,7 +60,7 @@ makeCommand(info, (args, ev, plr) => {
     string, // dimension
     vec3,   // position
     vec2,   // head rotation
-  ][] = plr.db.get('homes') ?? [];
+  ][] = plr.db.get('homes', []);
 
   // add new home
   if (args.add) {
