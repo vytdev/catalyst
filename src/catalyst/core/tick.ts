@@ -113,7 +113,7 @@ system.runInterval(() => {
   // tick timeouts
   for (const handle of [...timeOuts]) {
     // if counter drops to zero, execute the timeout
-    if (--handle.counter != 0)
+    if (--handle.counter > 0)
       continue;
 
     try {
