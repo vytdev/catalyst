@@ -100,6 +100,9 @@ export class Client {
   /** bounty */
   public get bounty(): number { this.db.load(); return this.db.get('bounty', 0); }
   public set bounty(v: number) { this.db.load(); this.db.set('bounty', v); this.db.save(); }
+  /** vanish flag */
+  public get vanish(): boolean { this.db.load(); return this.db.get('vanish', false); }
+  public set vanish(v: boolean) { this.db.load(); this.db.set('vanish', v); this.db.save(); }
 
   /**
    * additional text on sidebar
@@ -209,9 +212,18 @@ events.on("afterEntityHurt", ev => {
     ev.damageSource.damagingEntity?.typeId != "minecraft:player" ||
     ev.hurtEntity.id == ev.damageSource.damagingEntity?.id
   ) return;
-  // set combat tag
-  getClientById(ev.hurtEntity.id)?.setCombatTag();
-  getClientById(ev.damageSource.damagingEntity.id)?.setCombatTag();
+
+  // get the clients
+  const victim = getClientById(ev.hurtEntity.id);
+  const attacker = getClientById(ev.damageSource.damagingEntity.id);
+
+  // msg them
+  if (!victim.combatTag) victim.msg('§cyou are being attacked by §6' + attacker.name);
+  if (!attacker.combatTag) attacker.msg('§cyou are attacking §6' + victim.name);
+
+  // set combat
+  victim.setCombatTag();
+  attacker.setCombatTag();
 });
 
 let validationTimeCounter = 0;
@@ -262,8 +274,10 @@ setTickInterval(() => {
       v.combatTimer--;
       if (v.combatTimer > 0)
         msg += `§7  Combat tag: §c${msToString(v.combatTimer * 50 + 1000 /* +1s */)}\n`;
-      else
+      else {
         v.player.onScreenDisplay.setTitle('§aYour combat tag is expired!§r');
+        v.msg('§ayou are no longer in combat');
+      }
     }
 
     // speedometer when you're using elytra
@@ -280,6 +294,15 @@ setTickInterval(() => {
       const speedKPH = Math.round(speed * 720) / 10;
       // set speed
       msg += `§7  Speed: §6${speedKPH} km/h\n`;
+    }
+
+    // vanish flag
+    if (v.vanish) {
+      v.player.addEffect('invisibility', 86_400 * 20, {
+        amplifier: 255,
+        showParticles: false,
+      });
+      msg += '§6  You are invisible!\n';
     }
 
     // additional sidebar texts

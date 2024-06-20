@@ -54,5 +54,6 @@ import("./mloc.js");
 import("./perm.js");
 import("./shop.js");
 import("./spawn.js");
+import("./vanish.js");
 import("./warp.js");
 
