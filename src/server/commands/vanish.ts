@@ -1,6 +1,6 @@
 import { makeCommand } from "./index.js";
 import { commandSub } from "../../catalyst/@types/commands";
-import { queueCommand, RawText } from "../../catalyst/index.js";
+import { setTickTimeout,queueCommand, RawText } from "../../catalyst/index.js";
 import { assertIsAdmin } from "../utils.js";
 
 const info: commandSub = {
@@ -45,7 +45,8 @@ makeCommand(info, (args, ev, plr) => {
     if (args.msg)
       queueCommand('/tellraw @a ' + rawMsg);
     plr.msg('§ayou are now visible');
-    plr.player.removeEffect('invisibility');
+    // remove invisibility effect to the player
+    setTickTimeout(() => plr.player.removeEffect('invisibility'));
   }
 
 });
