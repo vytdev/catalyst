@@ -6,18 +6,18 @@
  * event listener interface
  */
 export interface eventListener {
-	/**
-	 * name of event
-	 */
-	event: string,
-	/**
-	 * the callback to execute
-	 */
-	callback: (...args: any) => void,
-	/**
-	 * listen for event once
-	 */
-	once: boolean,
+  /**
+   * name of event
+   */
+  event: string,
+  /**
+   * the callback to execute
+   */
+  callback: (...args: any) => void,
+  /**
+   * listen for event once
+   */
+  once: boolean,
 }
 
 /**
@@ -25,105 +25,110 @@ export interface eventListener {
  * event manager class
  */
 export class EventManager<T extends Record<string, any[]>> {
-	/**
-	 * event listeners
-	 * @private
-	 */
-	private readonly _listeners: eventListener[] = [];
+  /**
+   * event listeners
+   * @private
+   */
+  private readonly _listeners: eventListener[] = [];
 
-	/**
-	 * registers an event listener
-	 * @param event the name of event to listen for
-	 * @param callback a function to call when the event is fired
-	 * @param [once] listen for the event only once
-	 * @param [prepend] make the listener in first priority to execute
-	 * @returns the event listener object
-	 */
-	public addEventListener<N extends keyof T>(
-		event: N,
-		callback: (...args: T[N]) => void,
-		once?: boolean,
-		prepend?: boolean
-	): eventListener {
-		const listener = {
-			event: event as string,
-			callback,
-			once: !!once
-		};
-		this._listeners.push(listener);
-		return listener;
-	}
+  /**
+   * registers an event listener
+   * @param event the name of event to listen for
+   * @param callback a function to call when the event is fired
+   * @param [once] listen for the event only once
+   * @param [prepend] make the listener in first priority to execute
+   * @returns the event listener object
+   */
+  public addEventListener<N extends keyof T>(
+    event: N,
+    callback: (...args: T[N]) => void,
+    once?: boolean,
+    prepend?: boolean
+  ): eventListener {
+    const listener = {
+      event: event as string,
+      callback,
+      once: !!once
+    };
 
-	/**
-	 * removes an event listener
-	 * @param listener the listener to remove
-	 * @returns true if succeded
-	 */
-	public removeEventListener(listener: eventListener): boolean {
-		const idx = this._listeners.indexOf(listener);
-		if (idx == -1) return false;
-		this._listeners.splice(idx, 1);
-		return true;
-	}
+    // set the listener to queue
+    if (prepend) this._listeners.unshift(listener);
+    else this._listeners.push(listener);
 
-	/**
-	 * fires an event
-	 * @param event the name of event
-	 * @param args[] the arguments to fire
-	 * @returns number of listeners that is fired
-	 */
-	public dispatchEvent<N extends keyof T>(event: N, ...args: T[N]): number {
-		// number of listeners ran
-		let n = 0;
+    return listener;
+  }
 
-		// iterate through the _listeners array
-		this._listeners.forEach(listener => {
-			// skip listener
-			if (listener.event != event) return;
-			// increment the counter
-			n++;
+  /**
+   * removes an event listener
+   * @param listener the listener to remove
+   * @returns true if succeded
+   */
+  public removeEventListener(listener: eventListener): boolean {
+    const idx = this._listeners.indexOf(listener);
+    if (idx == -1) return false;
+    this._listeners.splice(idx, 1);
+    return true;
+  }
 
-			// run the listener
-			try {
-				listener.callback?.(...args);
-			} catch (e) {
-				// error
-				let msg = `Uncaught exception on an event listener for ${event as string}:\n`;
-				msg += e;
-				if (e?.stack) msg += e.stack;
-				console.error(e);
-			}
+  /**
+   * fires an event
+   * @param event the name of event
+   * @param args[] the arguments to fire
+   * @returns number of listeners that is fired
+   */
+  public dispatchEvent<N extends keyof T>(event: N, ...args: T[N]): number {
+    // number of listeners ran
+    let n = 0;
 
-			// the listener only listens once
-			if (listener.once) this.removeEventListener(listener);
-		});
+    // iterate through the _listeners array
+    this._listeners.forEach(listener => {
+      // skip listener
+      if (listener.event != event) return;
+      // increment the counter
+      n++;
 
-		return n;
-	}
+      // run the listener
+      try {
+        listener.callback?.(...args);
+      } catch (e) {
+        // error
+        let msg = `Uncaught exception on an event listener for ${event as string}:\n`;
+        msg += e;
+        if (e?.stack) msg += e.stack;
+        console.error(e);
+      }
 
-	// some aliases for our methods:
+      // the listener only listens once
+      if (listener.once) this.removeEventListener(listener);
+    });
 
-	public on<N extends keyof T>(event: N, callback: (...args: T[N]) => void): eventListener {
-		return this.addEventListener(event, callback, false, false);
-	}
+    return n;
+  }
 
-	public once<N extends keyof T>(event: N, callback: (...args: T[N]) => void): eventListener {
-		return this.addEventListener(event, callback, true, false);
-	}
+  // some aliases for our methods:
 
-	public prepend<N extends keyof T>(event: N, callback: (...args: T[N]) => void): eventListener {
-		return this.addEventListener(event, callback, false, true);
-	}
+  public on<N extends keyof T>(event: N, callback: (...args: T[N]) => void): eventListener {
+    return this.addEventListener(event, callback, false, false);
+  }
 
-	public prependOnce<N extends keyof T>(event: N, callback: (...args: T[N]) => void): eventListener {
-		return this.addEventListener(event, callback, true, true);
-	}
+  public once<N extends keyof T>(event: N, callback: (...args: T[N]) => void): eventListener {
+    return this.addEventListener(event, callback, true, false);
+  }
 
-	public off(listener: eventListener): boolean {
-		return this.removeEventListener(listener);
-	}
+  public prepend<N extends keyof T>(event: N, callback: (...args: T[N]) => void): eventListener {
+    return this.addEventListener(event, callback, false, true);
+  }
 
-	public emit<N extends keyof T>(event: N, ...args: T[N]): number {
-		return this.dispatchEvent(event, ...args);
-	}
+  public prependOnce<N extends keyof T>(event: N, callback: (...args: T[N]) => void): eventListener {
+    return this.addEventListener(event, callback, true, true);
+  }
+
+  public off(listener: eventListener): boolean {
+    return this.removeEventListener(listener);
+  }
+
+  public emit<N extends keyof T>(event: N, ...args: T[N]): number {
+    return this.dispatchEvent(event, ...args);
+  }
 }
+
